@@ -1,0 +1,314 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TokenStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+// Mise à jour du modèle Actif
+model Actif {
+  actifId       String          @id
+  serialNumber  String          @unique
+  actifType     String
+  dateAjout     DateTime
+  actifTypeId   String
+  statusId      String
+  etatId        String
+  //marque             String
+  //modele             String
+  //fournisseur        String
+  //contactFournisseur String
+  //Contactsupport     String
+  marqueId      String?
+  modeleId      String?
+  fournisseurId String?
+  warrantyEnd   DateTime?
+  quantity      Int
+  actiftype     actifType       @relation(fields: [actifTypeId], references: [actifTypeId])
+  status        Status          @relation(fields: [statusId], references: [statusId])
+  etat          Etat            @relation(fields: [etatId], references: [etatId])
+  employees     EmployeeActif[] // Many-to-many relationship
+  attachments   Attachment[] // One-to-many relation with Attachment
+  specification Specification? // 1:1 Relationship
+  activityLogs  ActivityLog[]
+  hashtags      ActifHashtag[] // Relation avec Hashtag (many-to-many)
+  marque        Marque?         @relation(fields: [marqueId], references: [marqueId])
+  modele        Modele?         @relation(fields: [modeleId], references: [modeleId])
+  fournisseurs      ActifFournisseur[] // Many-to-many relationship with Fournisseur
+
+}
+
+model Etat {
+  etatId   String    @id
+  name     String    @unique // e.g., "En panne", "Attribué", etc.
+  actifs   Actif[] // One-to-many relation with Actif
+  licenses License[] // One-to-many relation with License
+}
+
+model Status {
+  statusId String    @id
+  name     String    @unique // e.g., "En panne", "Attribué", etc.
+  actifs   Actif[] // One-to-many relation with Actif
+  licenses License[] // One-to-many relation with License
+}
+
+model Specification {
+  specificationId String  @id
+  actifId         String  @unique // Ensures one Specification per Actif
+  ram             String? // e.g., "16GB DDR4"
+  cpu             String? // e.g., "Intel i7 11th Gen"
+  stockage        String? // e.g., "512GB SSD"
+  graphique       String? // e.g., "Nvidia RTX 3090"
+  actif           Actif   @relation(fields: [actifId], references: [actifId])
+}
+
+model Attachment {
+  attachmentId String @id
+  actifId      String
+  fileName     String
+  fileType     String
+  fileUrl      String
+  actif        Actif  @relation(fields: [actifId], references: [actifId])
+}
+
+model Employee {
+  employeeId       String            @id
+  nom              String
+  email            String            @unique
+  actifs           EmployeeActif[] // Many-to-many relationship through EmployeeActif
+  licenses         EmployeeLicense[]
+  assignmentTokens AssignmentToken[]
+  activityLogs     ActivityLog[]
+}
+
+model AssignmentToken {
+  tokenId    String      @id
+  token      String      @unique
+  employeeId String
+  actifIds   String[] // Array of actif IDs included in this assignment
+  licenseIds String[] // Array of license IDs included in this assignment (new field)
+  type       String      @default("actif") // 'actif' or 'license' to indicate type of assignment (new field)
+  issuedAt   DateTime    @default(now())
+  expiresAt  DateTime
+  usedAt     DateTime?
+  status     TokenStatus @default(PENDING)
+  employee   Employee    @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([status])
+  @@index([employeeId])
+  @@index([type])
+}
+
+// Join table to link Employees and Actifs
+model EmployeeActif {
+  employeeId String
+  actifId    String
+  assignedAt DateTime @default(now()) // Tracks when an actif was assigned
+  quantity   Int      @default(1)
+  employee   Employee @relation(fields: [employeeId], references: [employeeId])
+  actif      Actif    @relation(fields: [actifId], references: [actifId])
+
+  @@id([employeeId, actifId]) // Composite primary key
+}
+
+model Category {
+  categoryId  String        @id
+  nom         String
+  actiftype   actifType[] // One-to-many relationship with SubCategory
+  licensetype LicenseType[]
+}
+
+model actifType {
+  actifTypeId String   @id
+  actifs      Actif[]
+  nom         String
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [categoryId]) // Foreign key relation
+  Marque      Marque[]
+}
+
+// Mise à jour du modèle License
+model License {
+  licenseId       String              @id
+  softwareName    String
+  version         String
+  licenseType     String
+  licenseQuantity Int
+  licenseKey      String
+  vendorName      String
+  vendorContact   String
+  supportContact  String
+  startDate       DateTime
+  expiryDate      DateTime
+  statusId        String
+  etatId          String
+  assignedTo      String?
+  licenseTypeId   String
+  status          Status              @relation(fields: [statusId], references: [statusId])
+  etat            Etat                @relation(fields: [etatId], references: [etatId])
+  licensetype     LicenseType         @relation(fields: [licenseTypeId], references: [licenseTypeId])
+  employees       EmployeeLicense[] // Many-to-many relationship
+  attachments     LicenseAttachment[] // One-to-many relation with LicenseAttachment
+  hashtags        LicenseHashtag[] // Relation avec Hashtag (many-to-many)
+  activityLogs    ActivityLog[]
+}
+
+// LicenseType model (similar to actifType)
+model LicenseType {
+  licenseTypeId String    @id
+  licenses      License[]
+  nom           String
+  categoryId    String
+  category      Category  @relation(fields: [categoryId], references: [categoryId]) // Foreign key relation
+}
+
+// Join table for License and Employee
+model EmployeeLicense {
+  employeeId String
+  licenseId  String
+  assignedAt DateTime @default(now()) // Tracks when a license was assigned
+  employee   Employee @relation(fields: [employeeId], references: [employeeId])
+  license    License  @relation(fields: [licenseId], references: [licenseId])
+  quantity   Int      @default(1)
+
+  @@id([employeeId, licenseId]) // Composite primary key
+}
+
+// Add attachments for licenses
+model LicenseAttachment {
+  attachmentId String  @id
+  licenseId    String
+  fileName     String
+  fileType     String
+  fileUrl      String
+  license      License @relation(fields: [licenseId], references: [licenseId])
+}
+
+// Ajout du modèle Hashtag
+model Hashtag {
+  hashtagId   String           @id
+  name        String           @unique
+  description String?
+  createdAt   DateTime         @default(now())
+  actifs      ActifHashtag[]
+  licenses    LicenseHashtag[]
+}
+
+// Table de jointure pour Actif et Hashtag
+model ActifHashtag {
+  actifId    String
+  hashtagId  String
+  assignedAt DateTime @default(now())
+  actif      Actif    @relation(fields: [actifId], references: [actifId])
+  hashtag    Hashtag  @relation(fields: [hashtagId], references: [hashtagId])
+
+  @@id([actifId, hashtagId])
+}
+
+// Table de jointure pour License et Hashtag
+model LicenseHashtag {
+  licenseId  String
+  hashtagId  String
+  assignedAt DateTime @default(now())
+  license    License  @relation(fields: [licenseId], references: [licenseId])
+  hashtag    Hashtag  @relation(fields: [hashtagId], references: [hashtagId])
+
+  @@id([licenseId, hashtagId])
+}
+
+// Activity log types enum
+enum ActivityType {
+  ACTIF_ASSIGNED
+  ACTIF_RESERVED
+  ACTIF_ACCEPTED
+  ACTIF_REJECTED
+  ACTIF_REMOVED
+  LICENSE_ASSIGNED
+  LICENSE_RESERVED // New type
+  LICENSE_ACCEPTED // New type
+  LICENSE_REJECTED // New type
+  LICENSE_REMOVED
+}
+
+// Activity log model for tracking user actions
+model ActivityLog {
+  logId        String       @id @default(uuid())
+  activityType ActivityType
+  timestamp    DateTime     @default(now())
+  employeeId   String?
+  actifId      String?
+  licenseId    String? // This field already exists
+  userId       String? // ID of the admin user who performed the action
+  details      String? // Additional information like reason
+
+  // Relations
+  employee Employee? @relation(fields: [employeeId], references: [employeeId])
+  actif    Actif?    @relation(fields: [actifId], references: [actifId])
+  license  License?  @relation(fields: [licenseId], references: [licenseId]) // Add the relation
+
+  @@index([employeeId])
+  @@index([actifId])
+  @@index([licenseId])
+  @@index([activityType])
+  @@index([timestamp])
+}
+
+model Marque {
+  marqueId    String    @id
+  name        String
+  actifTypeId String
+  actifType   actifType @relation(fields: [actifTypeId], references: [actifTypeId])
+  modeles     Modele[]
+  actifs      Actif[]
+
+  @@unique([name, actifTypeId]) // Prevent duplicate brands for same actif type
+}
+
+model Modele {
+  modeleId String  @id
+  name     String
+  marqueId String
+  marque   Marque  @relation(fields: [marqueId], references: [marqueId])
+  actifs   Actif[]
+
+  @@unique([name, marqueId]) // Prevent duplicate models for same brand
+}
+
+model Fournisseur {
+  fournisseurId String               @id
+  name          String               @unique
+  email         String?              // New field
+  phone         String?              // New field
+  actifs            ActifFournisseur[] // Many-to-many relationship with Actif
+
+}
+
+model ActifFournisseur {
+  actifFournisseurId String   @id @default(uuid())
+  actifId           String
+  fournisseurId     String
+  quantity          Int      @default(1)
+  assignedAt        DateTime @default(now())
+  actif             Actif    @relation(fields: [actifId], references: [actifId], onDelete: Cascade)
+  fournisseur       Fournisseur @relation(fields: [fournisseurId], references: [fournisseurId])
+
+  @@unique([actifId, fournisseurId])
+}
+
+//------------------------------------------------------------------------------
