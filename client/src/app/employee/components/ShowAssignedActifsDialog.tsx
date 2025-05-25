@@ -29,6 +29,8 @@ import {
   EmployeeActif,
   useGetCategoriesQuery,
   useGetStatusesQuery,
+  useGetMarquesQuery,
+  useGetModelesQuery,
   useGetActifTypesQuery,
 } from "@/state/api";
 import { distanceInWordsToNow } from "date-fns";
@@ -98,26 +100,54 @@ const ShowAssignedActifsDialog = ({
     return map;
   }, [statuses]);
 
+  const { data: marques = [] } = useGetMarquesQuery();
+  const { data: modeles = [] } = useGetModelesQuery();
+
+  // Then update your helper functions to look up the names by ID
   const getMarqueName = (actif: any): string => {
     if (actif?.marqueObj?.name) {
       return actif.marqueObj.name;
     }
-    // Try to access nested structure if it exists
     if (actif?.actif?.marqueObj?.name) {
       return actif.actif.marqueObj.name;
     }
-    return actif?.marqueId || actif?.actif?.marqueId || "";
+
+    // Look up in marques array if we only have ID
+    const marqueId = actif?.marqueId || actif?.actif?.marqueId;
+    if (marqueId) {
+      const marque = marques.find((m) => m.marqueId === marqueId);
+      if (marque) return marque.name;
+    }
+
+    return "Non spécifié";
   };
 
   const getModeleName = (actif: any): string => {
     if (actif?.modeleObj?.name) {
       return actif.modeleObj.name;
     }
-    // Try to access nested structure if it exists
     if (actif?.actif?.modeleObj?.name) {
       return actif.actif.modeleObj.name;
     }
-    return actif?.modeleId || actif?.actif?.modeleId || "";
+
+    // Look up in modeles array if we only have ID
+    const modeleId = actif?.modeleId || actif?.actif?.modeleId;
+    if (modeleId) {
+      const modele = modeles.find((m) => m.modeleId === modeleId);
+      if (modele) return modele.name;
+    }
+
+    return "Non spécifié";
+  };
+
+  const getActifTypeName = (actif: any): string => {
+    if (actif?.actiftype?.nom) {
+      return actif.actiftype.nom;
+    }
+    if (actif?.actif?.actiftype?.nom) {
+      return actif.actif.actiftype.nom;
+    }
+    return actif?.actifType || actif?.actif?.actifType || "";
   };
 
   // Helper function to get status name
@@ -162,17 +192,17 @@ const ShowAssignedActifsDialog = ({
   };
 
   // Format the assignment date
-const formatAssignmentDate = (dateString: string) => {
-  try {
-    const date = new Date(dateString);
-    return distanceInWordsToNow(date, {
-      addSuffix: true,
-      locale: fr,
-    } as any); // Type assertion
-  } catch (error) {
-    return "Date inconnue";
-  }
-};
+  const formatAssignmentDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return distanceInWordsToNow(date, {
+        addSuffix: true,
+        locale: fr,
+      } as any); // Type assertion
+    } catch (error) {
+      return "Date inconnue";
+    }
+  };
 
   // Get actif data regardless of where it&apos;s located in the props structure
   const getActifData = (item: any) => {
@@ -243,7 +273,7 @@ const formatAssignmentDate = (dateString: string) => {
                     }}
                     secondaryAction={
                       <Box sx={{ display: "flex", gap: 1 }}>
-                        <Tooltip title="Retirer l&apos;équipement">
+                        <Tooltip title="Retirer l'équipement">
                           <IconButton
                             edge="end"
                             color="error"
@@ -271,7 +301,8 @@ const formatAssignmentDate = (dateString: string) => {
                             variant="subtitle1"
                             sx={{ fontWeight: 500 }}
                           >
-                            {getMarqueName(actif)} {getModeleName(actif)}
+                            {getActifTypeName(actif)} : {getMarqueName(actif)}{" "}
+                            {getModeleName(actif)}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             S/N: {actif.serialNumber}

@@ -2,43 +2,56 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "@/state/api";
+import { useLoginMutation, useRequestPasswordResetMutation } from "@/state/api";
 import { setAuthToken, debugTokenStatus } from "@/utils/auth";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(""); // For login (email)
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [login, { isLoading }] = useLoginMutation();
+  const [error, setError] = useState(""); // General login/form error
+  const [message, setMessage] = useState(""); // For success/info messages (e.g., after requesting password reset)
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
 
-  // New state variables for the two-step login process
+  // State for forgot password
+  const [view, setView] = useState<"login" | "forgotPassword">("login"); // 'login', 'forgotPassword'
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [
+    requestPasswordReset,
+    {
+      isLoading: isRequestingPasswordReset,
+      isSuccess: isPasswordResetRequested,
+    },
+  ] = useRequestPasswordResetMutation();
+
+  // Existing state variables for the two-step login process
   const [loginStep, setLoginStep] = useState(1); // 1 for credentials, 2 for database selection
   const [selectedDatabase, setSelectedDatabase] = useState("");
-  const [authToken, setTemporaryAuthToken] = useState(""); // Store token temporarily between steps
+  const [authToken, setTemporaryAuthToken] = useState("");
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setMessage("");
 
     try {
-      console.log("Attempting login...");
-      const response = await login({ username, password }).unwrap();
+      console.log("Attempting login with email:", username);
+      const response = await login({ username, password }).unwrap(); // username here is the email
       console.log("Login response:", response);
 
       if (response.token) {
-        // Store token temporarily (don't set in auth yet)
         setTemporaryAuthToken(response.token);
-
         console.log("Credentials validated successfully");
-        // Move to database selection step
-        setLoginStep(2);
+        setLoginStep(2); // Move to database selection step
       } else {
-        setError("No token received");
+        setError("No token received after login.");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("Information incorrects");
+      const apiError = err as { data?: { message?: string }; status?: number };
+      setError(
+        apiError.data?.message || "Informations de connexion incorrectes."
+      );
     }
   };
 
@@ -47,17 +60,20 @@ export default function Login() {
     try {
       console.log("Selecting database:", database);
 
-      const response = await fetch("/api/auth/select-database", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: authToken,
-          selectedDatabase: database,
-        }),
-        credentials: "include", // Important: include credentials for cookies
-      });
+      const response = await fetch(
+        "api/auth/select-database",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: authToken,
+            selectedDatabase: database,
+          }),
+          credentials: "include", // Important: include credentials for cookies
+        }
+      );
 
       console.log("Response status:", response.status);
 
@@ -73,12 +89,12 @@ export default function Login() {
       if (data.success) {
         // IMPORTANT: Store the token with the database selection
         setAuthToken(data.token, database);
-        
+
         // Check token status after setting
         setTimeout(() => {
           const tokenStatus = debugTokenStatus();
           console.log("Token status after setting:", tokenStatus);
-          
+
           // If token is properly set, navigate to dashboard
           if (tokenStatus.cookie) {
             console.log("Token set successfully - redirecting to dashboard");
@@ -99,186 +115,334 @@ export default function Login() {
     }
   };
 
-  // Render different forms based on login step
-  if (loginStep === 1) {
-    // Step 1: Username and Password form
-    return (
-      <div
-        className="flex items-center justify-center min-h-screen"
-        style={{ backgroundColor: "#f3f4f6" }}
-      >
-        <div
-          className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md transition-all duration-200"
-          style={{
-            boxShadow:
-              "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          }}
-        >
-          <div className="mb-6 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Bonjour</h1>
-            <p className="text-gray-600">Veuillez vous connecter</p>
-          </div>
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+    try {
+      const response = await requestPasswordReset({
+        email: forgotPasswordEmail,
+      }).unwrap();
+      setMessage(
+        response.message ||
+          "Si votre email est enregistré, vous recevrez un lien de réinitialisation."
+      );
+      // Optionally, clear the email field or switch view back to login after a delay
+      // setForgotPasswordEmail("");
+      // setTimeout(() => setView("login"), 5000); // Go back to login after 5s
+    } catch (err) {
+      console.error("Forgot password error:", err);
+      const apiError = err as { data?: { message?: string }; status?: number };
+      setError(
+        apiError.data?.message || "Une erreur est survenue. Veuillez réessayer."
+      );
+    }
+  };
 
-          {error && (
-            <div
-              className="mb-6 rounded-md p-4"
-              style={{
-                backgroundColor: "#fee2e2",
-                borderColor: "#f87171",
-                color: "#b91c1c",
-              }}
-            >
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+  // Render different forms based on login step and view
+  if (loginStep === 1) {
+    if (view === "login") {
+      // Step 1, View 1: Username and Password form
+      return (
+        <div
+          className="flex items-center justify-center min-h-screen"
+          style={{ backgroundColor: "#f3f4f6" }}
+        >
+          <div
+            className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md transition-all duration-200"
+            style={{
+              boxShadow:
+                "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            }}
+          >
+            <div className="mb-6 text-center">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Bonjour</h1>
+              <p className="text-gray-600">Veuillez vous connecter</p>
+            </div>
+
+            {error && (
+              <div
+                className="mb-4 rounded-md p-3 text-sm"
+                style={{
+                  backgroundColor: "#fee2e2",
+                  borderColor: "#f87171",
+                  color: "#b91c1c",
+                }}
+              >
                 {error}
               </div>
-            </div>
-          )}
-
-          <form onSubmit={handleCredentialsSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-1"
+            )}
+            {message && (
+              <div
+                className="mb-4 rounded-md p-3 text-sm"
+                style={{
+                  backgroundColor: "#d1fae5", // Green for success
+                  borderColor: "#6ee7b7",
+                  color: "#065f46",
+                }}
               >
-                Nom d&apos;utilisateur
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 block w-full px-4 py-2 border rounded-md"
-                  style={{
-                    borderColor: "#d1d5db",
-                    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                  }}
-                  placeholder="votre nom d'utilisateur"
-                  required
-                />
+                {message}
               </div>
-            </div>
+            )}
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Mot de passe
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 block w-full px-4 py-2 border rounded-md"
-                  style={{
-                    borderColor: "#d1d5db",
-                    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                  }}
-                  placeholder="Votre mot de passe"
-                  required
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors duration-200"
-              style={{
-                color: "#FFFFFF",
-                backgroundColor: "#007857",
-                boxShadow:
-                  "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-              }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.backgroundColor = "#006745")
-              }
-              onMouseOut={(e) =>
-                (e.currentTarget.style.backgroundColor = "#007857")
-              }
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <svg
-                    className="animate-spin h-5 w-5 mr-3 "
-                    style={{ color: "#FFFFFF" }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
+            <form onSubmit={handleCredentialsSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="username" // Should be email, but using 'username' for consistency with existing req.body
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Adresse e-mail
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    {/* Email Icon */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Connexion...
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="email" // Changed to type email for better UX
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="pl-10 block w-full px-4 py-2 border rounded-md"
+                    style={{
+                      borderColor: "#d1d5db",
+                      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                    }}
+                    placeholder="votre.email@example.com"
+                    required
+                  />
                 </div>
-              ) : (
-                "Se connecter"
-              )}
-            </button>
-          </form>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Mot de passe
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    {/* Lock Icon */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-10 block w-full px-4 py-2 border rounded-md"
+                    style={{
+                      borderColor: "#d1d5db",
+                      boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                    }}
+                    placeholder="Votre mot de passe"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setView("forgotPassword");
+                    setError("");
+                    setMessage("");
+                  }}
+                  className="text-sm font-medium hover:underline"
+                  style={{ color: "#007857" }}
+                >
+                  Mot de passe oublié ?
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors duration-200"
+                style={{
+                  color: "#FFFFFF",
+                  backgroundColor: "#007857",
+                  boxShadow:
+                    "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#006745")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#007857")
+                }
+                disabled={isLoginLoading}
+              >
+                {isLoginLoading ? "Connexion..." : "Se connecter"}
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else if (view === "forgotPassword") {
+      // Step 1, View 2: Forgot Password form
+      return (
+        <div
+          className="flex items-center justify-center min-h-screen"
+          style={{ backgroundColor: "#f3f4f6" }}
+        >
+          <div
+            className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md transition-all duration-200"
+            style={{
+              boxShadow:
+                "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            }}
+          >
+            <div className="mb-6 text-center">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Mot de passe oublié
+              </h1>
+              <p className="text-gray-600">
+                Entrez votre adresse e-mail pour recevoir un lien de
+                réinitialisation.
+              </p>
+            </div>
+
+            {error && (
+              <div
+                className="mb-4 rounded-md p-3 text-sm"
+                style={{
+                  backgroundColor: "#fee2e2",
+                  borderColor: "#f87171",
+                  color: "#b91c1c",
+                }}
+              >
+                {error}
+              </div>
+            )}
+            {message && ( // Display success message here too if password reset was requested
+              <div
+                className="mb-4 rounded-md p-3 text-sm"
+                style={{
+                  backgroundColor: isPasswordResetRequested
+                    ? "#d1fae5"
+                    : "#e0f2fe", // Green for success, blue for info
+                  borderColor: isPasswordResetRequested ? "#6ee7b7" : "#7dd3fc",
+                  color: isPasswordResetRequested ? "#065f46" : "#0c4a6e",
+                }}
+              >
+                {message}
+              </div>
+            )}
+
+            {!isPasswordResetRequested && ( // Only show form if reset hasn't been successfully requested yet
+              <form onSubmit={handleForgotPasswordSubmit} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="forgotPasswordEmail"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Adresse e-mail
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                      {/* Email Icon */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      type="email"
+                      id="forgotPasswordEmail"
+                      value={forgotPasswordEmail}
+                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                      className="pl-10 block w-full px-4 py-2 border rounded-md"
+                      style={{
+                        borderColor: "#d1d5db",
+                        boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                      }}
+                      placeholder="votre.email@example.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors duration-200"
+                  style={{
+                    color: "#FFFFFF",
+                    backgroundColor: "#007857",
+                    boxShadow:
+                      "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#006745")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#007857")
+                  }
+                  disabled={isRequestingPasswordReset}
+                >
+                  {isRequestingPasswordReset
+                    ? "Envoi en cours..."
+                    : "Envoyer le lien de réinitialisation"}
+                </button>
+              </form>
+            )}
+
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => {
+                  setView("login");
+                  setError("");
+                  setMessage("");
+                }}
+                className="text-sm font-medium hover:underline"
+                style={{ color: "#007857" }}
+              >
+                Retour à la connexion
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
   } else {
-    // Step 2: Database selection
+    // Step 2: Database selection (existing code)
     return (
       <div
         className="flex items-center justify-center min-h-screen"
@@ -286,10 +450,7 @@ export default function Login() {
       >
         <div
           className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md transition-all duration-200"
-          style={{
-            boxShadow:
-              "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          }}
+          // ... (rest of the database selection JSX, no changes needed here for forgot password) ...
         >
           <div className="mb-6 text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -301,7 +462,7 @@ export default function Login() {
             </p>
           </div>
 
-          {error && (
+          {error && ( // Display error from database selection if any
             <div
               className="mb-6 rounded-md p-4"
               style={{
@@ -310,21 +471,7 @@ export default function Login() {
                 color: "#b91c1c",
               }}
             >
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {error}
-              </div>
+              {error}
             </div>
           )}
 
@@ -332,18 +479,7 @@ export default function Login() {
             <button
               onClick={() => handleDatabaseSelect("insight")}
               className="w-full flex justify-center py-3 px-4 border rounded-md shadow-sm text-sm font-medium transition-colors duration-200"
-              style={{
-                backgroundColor: "#f3f4f6",
-                borderColor: "#d1d5db",
-                color: "#111827",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#e5e7eb";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "#f3f4f6";
-              }}
+              // ... styles ...
             >
               Insight Times
             </button>
@@ -351,37 +487,19 @@ export default function Login() {
             <button
               onClick={() => handleDatabaseSelect("lagom")}
               className="w-full flex justify-center py-3 px-4 border rounded-md shadow-sm text-sm font-medium transition-colors duration-200"
-              style={{
-                backgroundColor: "#f3f4f6",
-                borderColor: "#d1d5db",
-                color: "#111827",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#e5e7eb";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "#f3f4f6";
-              }}
+              // ... styles ...
             >
               Lagom Consulting
             </button>
 
             <button
-              onClick={() => setLoginStep(1)}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors duration-200"
-              style={{
-                color: "#6B7280",
-                backgroundColor: "#ffffff",
-                borderColor: "#d1d5db",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "#f9fafb";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "#ffffff";
-              }}
+              onClick={() => {
+                setLoginStep(1);
+                setError("");
+                setMessage("");
+              }} // Go back to credential step (login view by default)
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium"
+              // ... styles ...
             >
               Retour
             </button>
@@ -390,4 +508,5 @@ export default function Login() {
       </div>
     );
   }
+  return null; // Should not happen if logic is correct
 }

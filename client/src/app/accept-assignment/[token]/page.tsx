@@ -1,4 +1,3 @@
-// app/accept-assignment/[token]/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,6 +5,7 @@ import {
   useValidateAssignmentTokenQuery,
   useAcceptAssignmentMutation,
   useRejectAssignmentMutation,
+  Actif,
 } from "@/state/api";
 import {
   Box,
@@ -22,8 +22,16 @@ import {
   ListItemText,
   ListItemIcon,
   Container,
+  TextField,
+  Chip,
 } from "@mui/material";
-import { Package, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import {
+  Package,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Info,
+} from "lucide-react";
 
 // Assignment Acceptance Page
 export default function AcceptAssignment({
@@ -67,6 +75,28 @@ export default function AcceptAssignment({
       }
     }
   }, [data, error, isLoading]);
+
+  // Helper function to get device display name
+  const getDeviceDisplayName = (actif: Actif) => {
+    // Try to build a name from marque and model
+    if (actif.marqueObj?.name && actif.modeleObj?.name) {
+      return `${actif.marqueObj.name} ${actif.modeleObj.name}`;
+    }
+
+    // If marque exists but not model
+    if (actif.marqueObj?.name) {
+      return `${actif.marqueObj.name} ${actif.serialNumber}`;
+    }
+
+    // If we have actifType and actiftype.nom, use that with serial number
+    if (actif.actifType || (actif.actiftype && actif.actiftype.nom)) {
+      const typeName = actif.actiftype?.nom || actif.actifType;
+      return `${typeName} - ${actif.serialNumber}`;
+    }
+
+    // Last fallback - just show the serial number
+    return `Équipement ${actif.serialNumber}`;
+  };
 
   // Handle acceptance
   const handleAccept = async () => {
@@ -260,38 +290,63 @@ export default function AcceptAssignment({
           Équipements à accepter
         </Typography>
 
-        <List>
-          {data?.actifs?.map((actif) => (
-            <ListItem key={actif.actifId} disablePadding sx={{ py: 1 }}>
-              <ListItemIcon>
-                <Package />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${actif.marqueObj?.name || 'Unknown Marque'} ${actif.modeleObj?.name || 'Unknown Modele'}`}
-                secondary={
-                  <>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      color="text.primary"
-                    >
-                      S/N: {actif.serialNumber}
+        {data?.actifs?.length === 0 ? (
+          <Alert severity="info" sx={{ my: 2 }}>
+            Aucun équipement à afficher
+          </Alert>
+        ) : (
+          <List>
+            {data?.actifs?.map((actif) => (
+              <Paper
+                key={actif.actifId}
+                variant="outlined"
+                sx={{ mb: 2, p: 2, borderRadius: 1 }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <ListItemIcon>
+                    <Package />
+                  </ListItemIcon>
+                  <Typography variant="h6">
+                    {getDeviceDisplayName(actif)}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ pl: 6, mt: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>N° de série:</strong> {actif.serialNumber}
+                  </Typography>
+
+                  {actif.actiftype?.nom && (
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>Type:</strong> {actif.actiftype.nom}
                     </Typography>
-                    {actif.quantity > 1 && (
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        sx={{ ml: 2 }}
-                      >
-                        Quantité: {actif.quantity}
-                      </Typography>
-                    )}
-                  </>
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
+                  )}
+
+                  {actif.status?.name && (
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>Statut:</strong> {actif.status.name}
+                    </Typography>
+                  )}
+
+                  {actif.etat?.name && (
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>État:</strong> {actif.etat.name}
+                    </Typography>
+                  )}
+
+                  {actif.quantity > 1 && (
+                    <Chip
+                      label={`Quantité: ${actif.quantity}`}
+                      color="primary"
+                      size="small"
+                      sx={{ mt: 1 }}
+                    />
+                  )}
+                </Box>
+              </Paper>
+            ))}
+          </List>
+        )}
 
         <Divider sx={{ my: 3 }} />
 
@@ -305,9 +360,9 @@ export default function AcceptAssignment({
             sx={{ p: 2, mb: 3, maxHeight: "200px", overflow: "auto" }}
           >
             <Typography variant="body2">
-              <strong>1. Responsabilité</strong> L&apos;employé est responsable
-              des équipements mis à sa disposition et s&apos;engage à les
-              utiliser avec soin et uniquement dans le cadre de ses fonctions
+              <strong>1. Responsabilité</strong> L&apos;employé est responsable des
+              équipements mis à sa disposition et s&apos;engage à les utiliser avec
+              soin et uniquement dans le cadre de ses fonctions
               professionnelles.
             </Typography>
             <Typography variant="body2" mt={2}>
@@ -316,18 +371,17 @@ export default function AcceptAssignment({
               équipements.
             </Typography>
             <Typography variant="body2" mt={2}>
-              <strong>3. Restitution</strong> L&apos;employeur s&apos;engage à
-              restituer les équipements à la fin de son contrat ou à la demande
-              de l&apos;entreprise.
+              <strong>3. Restitution</strong> L&apos;employé s&apos;engage à restituer les
+              équipements à la fin de son contrat ou à la demande de
+              l&apos;entreprise.
             </Typography>
             <Typography variant="body2" mt={2}>
-              <strong>4. Utilisation</strong> L&apos;employé s&apos;engage à ne
-              pas installer de logiciels non autorisés sur les équipements.
+              <strong>4. Utilisation</strong> L&apos;employé s&apos;engage à ne pas
+              installer de logiciels non autorisés sur les équipements.
             </Typography>
             <Typography variant="body2" mt={2}>
-              <strong>5. Confidentialité</strong> L&apos;employé s&apos;engage à
-              protéger les données confidentielles présentes sur les
-              équipements.
+              <strong>5. Confidentialité</strong> L&apos;employé s&apos;engage à protéger
+              les données confidentielles présentes sur les équipements.
             </Typography>
           </Paper>
 
@@ -363,31 +417,52 @@ export default function AcceptAssignment({
                 {isAccepting ? (
                   <CircularProgress size={24} />
                 ) : (
-                  "Accepter l&apos;assignation"
+                  "Accepter l'assignation"
                 )}
               </Button>
             </>
           ) : (
             <>
-              <Button
-                variant="outlined"
-                onClick={() => setShowRejectionForm(false)}
-              >
-                Retour
-              </Button>
+              <Box sx={{ width: "100%" }}>
+                <TextField
+                  label="Motif du refus (optionnel)"
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                  margin="normal"
+                />
 
-              <Button
-                variant="contained"
-                color="error"
-                onClick={handleReject}
-                disabled={isRejecting}
-              >
-                {isRejecting ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  "Confirmer le refus"
-                )}
-              </Button>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 2,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={() => setShowRejectionForm(false)}
+                  >
+                    Retour
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleReject}
+                    disabled={isRejecting}
+                  >
+                    {isRejecting ? (
+                      <CircularProgress size={24} />
+                    ) : (
+                      "Confirmer le refus"
+                    )}
+                  </Button>
+                </Box>
+              </Box>
             </>
           )}
         </Box>

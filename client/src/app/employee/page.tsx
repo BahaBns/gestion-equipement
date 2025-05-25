@@ -15,6 +15,7 @@ import {
   useUpdateLicenseStatusMutation,
   useGetStatusesQuery,
   useDownloadAttachmentQuery,
+  useUpdateEmployeeMutation,
   License,
   Employee,
   Actif,
@@ -29,6 +30,7 @@ import {
 } from "@mui/x-data-grid";
 import { getEmployeeColumns } from "./components/EmployeeColumns";
 import CreateEmployeeDialog from "./components/CreateEmployeeDialog";
+import UpdateEmployeeDialog from "./components/UpdateEmployeeDialog"; 
 import DeleteConfirmationDialog from "./components/DeleteConfirmationDialog";
 import AssignActifsDialog from "./components/AssignActifsDialog";
 import AssignLicensesDialog from "./components/AssignLicensesDialog";
@@ -39,7 +41,15 @@ import RemoveLicencesDialog from "./components/RemoveLicenseDialog";
 import ContractDialog from "./components/ContractDialog";
 import { calculateActifAssignmentCounts } from "./utils/actifUtils";
 import { calculateLicenseAssignmentCounts } from "./utils/licenseUtils";
-import { UserPlus, Package, Key, Eye, Trash2, Download } from "lucide-react";
+import {
+  UserPlus,
+  Package,
+  Key,
+  Eye,
+  Trash2,
+  Download,
+  Edit,
+} from "lucide-react";
 import { Button } from "@/app/(components)/Button";
 import { Snackbar, Alert, Tab, Tabs } from "@mui/material";
 import { ReactNode } from "react";
@@ -110,6 +120,7 @@ const Users = () => {
 
   const [deleteEmployee] = useDeleteEmployeeMutation();
   const [createEmployee] = useCreateEmployeeMutation();
+  const [updateEmployee] = useUpdateEmployeeMutation(); // Add the update employee mutation
   const [assignActifs] = useAssignActifsToEmployeeMutation();
   const [removeActifs] = useRemoveActifsFromEmployeeMutation();
   const [assignLicenses] = useAssignLicensesToEmployeeMutation();
@@ -127,6 +138,7 @@ const Users = () => {
 
   // Modal states
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false); // New state for update modal
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [openAssignModal, setOpenAssignModal] = useState(false);
   const [openAssignLicensesModal, setOpenAssignLicensesModal] = useState(false);
@@ -148,6 +160,15 @@ const Users = () => {
 
   // Data states
   const [newEmployee, setNewEmployee] = useState({ nom: "", email: "" });
+  const [employeeToUpdate, setEmployeeToUpdate] = useState<{
+    employeeId: string;
+    nom: string;
+    email: string;
+  }>({
+    employeeId: "",
+    nom: "",
+    email: "",
+  }); // New state for employee to update
   const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
     null
@@ -307,6 +328,36 @@ const Users = () => {
   const handleOpenDeleteConfirm = (employeeId: string) => {
     setEmployeeToDelete(employeeId);
     setOpenDeleteConfirm(true);
+  };
+
+  // New handler for opening the update modal
+  const handleOpenUpdateModal = (employeeId: string) => {
+    const employee = employees?.find((emp) => emp.employeeId === employeeId);
+    if (employee) {
+      setEmployeeToUpdate({
+        employeeId: employee.employeeId,
+        nom: employee.nom,
+        email: employee.email,
+      });
+      setOpenUpdateModal(true);
+    }
+  };
+
+  // New handler for updating an employee
+  const handleUpdate = async () => {
+    try {
+      await updateEmployee({
+        employeeId: employeeToUpdate.employeeId,
+        nom: employeeToUpdate.nom,
+        email: employeeToUpdate.email,
+      }).unwrap();
+      setOpenUpdateModal(false);
+      refetch();
+      showNotification("Employé mis à jour avec succès", "success");
+    } catch (error) {
+      console.error("Failed to update employee:", error);
+      showNotification("Échec de la mise à jour de l'employé", "error");
+    }
   };
 
   const refetchEmployeeActifs = async () => {
@@ -885,7 +936,7 @@ const Users = () => {
     if (actionsColumnIndex >= 0) {
       baseColumns[actionsColumnIndex] = {
         ...baseColumns[actionsColumnIndex],
-        width: 400, // Increase width to fit buttons better
+        width: 450, // Increase width to fit buttons better (increased for new button)
         align: "right", // Align content to the right
         renderHeader: (params: GridColumnHeaderParams) => (
           <strong style={{ fontWeight: "bold" }}>
@@ -1016,6 +1067,18 @@ const Users = () => {
                 )}
               </div>
 
+              {/* Modify Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenUpdateModal(employeeId);
+                }}
+                className="flex items-center justify-center px-3 py-1.5 text-sm text-green-600 bg-green-50 hover:bg-green-100 rounded transition duration-150"
+              >
+                <Edit className="w-4 h-4 mr-1.5" />
+                Modifier
+              </button>
+
               {/* Delete Button */}
               <button
                 onClick={(e) => {
@@ -1109,6 +1172,19 @@ const Users = () => {
         setNewEmployee={setNewEmployee}
         handleCreate={handleCreate}
       />
+
+      {/* Update Employee Dialog */}
+      <UpdateEmployeeDialog
+        open={openUpdateModal}
+        onClose={() => {
+          console.log("Closing UpdateEmployeeDialog");
+          setOpenUpdateModal(false);
+        }}
+        employee={employeeToUpdate}
+        setEmployee={setEmployeeToUpdate}
+        handleUpdate={handleUpdate}
+      />
+
       <DeleteConfirmationDialog
         open={openDeleteConfirm}
         onClose={() => {

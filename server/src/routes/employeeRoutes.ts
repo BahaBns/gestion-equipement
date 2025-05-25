@@ -5,6 +5,7 @@ import {
   deleteEmployee,
   assignActifs,
   removeActifs,
+  modifyEmployee,
 } from "../controllers/employeeController";
 
 const router = Router();
@@ -14,6 +15,10 @@ router.get("/", getEmployees);
 
 // Create a new employee
 router.post("/", createEmployee);
+
+
+
+router.put("/:employeeId",modifyEmployee);
 
 // Assign actifs to an employee
 router.post("/:employeeId/assign-actifs", assignActifs);

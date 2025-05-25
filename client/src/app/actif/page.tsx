@@ -823,7 +823,7 @@ const Actifs = () => {
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center flex-wrap">
-          <Header name="Materiel" />
+          <Header name="Matériel" />
 
           {/* Multiple hashtag filter indicators */}
           {selectedHashtags.length > 0 && (

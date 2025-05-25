@@ -208,21 +208,21 @@ const Sidebar = () => {
         <SidebarLink
           href="/categories"
           icon={Archive}
-          label="Categories"
+          label="Catégories"
           isCollapsed={isSidebarCollapsed}
           onClick={() => handleNavigation("/categories")}
         />
         <SidebarLink
           href="/actif"
           icon={Clipboard}
-          label="Equipements"
+          label="Équipements"
           isCollapsed={isSidebarCollapsed}
           onClick={() => handleNavigation("/actif")}
         />
         <SidebarLink
           href="/employee"
           icon={User}
-          label="Employees"
+          label="Employés"
           isCollapsed={isSidebarCollapsed}
           onClick={() => handleNavigation("/employee")}
         />

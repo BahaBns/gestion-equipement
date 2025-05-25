@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash"; // Import debounce from lodash
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,7 @@ import {
   useGetMarquesByActifTypeQuery,
   useGetModelesByMarqueQuery,
   useGetFournisseursQuery,
+  useGetActifBySerialNumberQuery, // Import the query hook for serial number check
   Employee,
   Status,
   ActifType,
@@ -81,6 +83,7 @@ interface FormErrors {
   etatId: boolean;
   fournisseurId: boolean;
   supplierAllocations: boolean;
+  warrantyEnd: boolean; // Added warrantyEnd to the form errors interface
 }
 
 const CreateActifModal: React.FC<CreateActifModalProps> = ({
@@ -101,6 +104,11 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
 
   // États de la première étape - Informations de base
   const [serialNumber, setSerialNumber] = useState("");
+  // New state variables for serial number validation
+  const [isCheckingSerial, setIsCheckingSerial] = useState(false);
+  const [serialExists, setSerialExists] = useState(false);
+  const [serialTouched, setSerialTouched] = useState(false);
+
   const [actifType, setActifType] = useState("");
   const [actifTypeId, setActifTypeId] = useState("");
   const [categoryId, setCategoryId] = useState(preSelectedCategoryId);
@@ -108,6 +116,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
   const [etatId, setEtatId] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [warrantyEnd, setWarrantyEnd] = useState("");
+  const [warrantyTouched, setWarrantyTouched] = useState(false); // Track if warranty field was touched
 
   // Multi-supplier support
   const [useMultipleSuppliers, setUseMultipleSuppliers] = useState(false);
@@ -146,11 +155,30 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     etatId: false,
     fournisseurId: false,
     supplierAllocations: false,
+    warrantyEnd: false, // Initialize warranty validation error as false
   });
 
   // Query pour les employés
   const { data: employees, isLoading: isLoadingEmployees } =
     useGetEmployeesQuery();
+
+  // Set up the query hook for checking serial number uniqueness
+  const { data: existingActif, isLoading: isSerialCheckLoading } =
+    useGetActifBySerialNumberQuery(serialNumber, {
+      skip: !serialNumber || !isCheckingSerial,
+      // This will only run the query when we explicitly want to check
+    });
+
+  // Create a debounced version of the serial check function
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedCheckSerialNumber = useCallback(
+    debounce((serial: string) => {
+      if (serial.trim()) {
+        setIsCheckingSerial(true);
+      }
+    }, 500), // 500ms debounce to avoid excessive API calls
+    []
+  );
 
   // Fetch actifTypes based on selected category if not provided
   const { data: categoryActifTypes, isLoading: isLoadingActifTypes } =
@@ -180,6 +208,24 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     null
   );
   const isSoftwareCategory = selectedCategory?.nom === "Logiciels";
+
+  // Check for serial number uniqueness when the serial number changes
+  useEffect(() => {
+    if (serialNumber.trim()) {
+      debouncedCheckSerialNumber(serialNumber);
+    } else {
+      setSerialExists(false);
+      setIsCheckingSerial(false);
+    }
+  }, [serialNumber, debouncedCheckSerialNumber]);
+
+  // Update serialExists state when the query completes
+  useEffect(() => {
+    if (isCheckingSerial && !isSerialCheckLoading) {
+      setSerialExists(!!existingActif);
+      setIsCheckingSerial(false);
+    }
+  }, [existingActif, isSerialCheckLoading, isCheckingSerial]);
 
   // Update selected category when categoryId changes
   useEffect(() => {
@@ -226,8 +272,34 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     }
   }, [statusId, etats, statuses]);
 
+  // Handle serial number change with validation
+  const handleSerialNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSerialNumber(value);
+    setSerialTouched(true);
+
+    // Update form errors
+    setFormErrors((prev) => ({
+      ...prev,
+      serialNumber: !value.trim(),
+    }));
+  };
+
+  // Handle warranty end date change with validation
+  const handleWarrantyEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setWarrantyEnd(value);
+    setWarrantyTouched(true);
+
+    // Update form errors
+    setFormErrors((prev) => ({
+      ...prev,
+      warrantyEnd: !value.trim(),
+    }));
+  };
+
   // ActifType selection handler - updates actifType and resets related fields
-  const handleActifTypeChange = (e : any) => {
+  const handleActifTypeChange = (e: any) => {
     const newActifTypeId = e.target.value;
     setActifTypeId(newActifTypeId);
 
@@ -246,7 +318,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
   };
 
   // Handle marque selection
-  const handleMarqueChange = (e : any) => {
+  const handleMarqueChange = (e: any) => {
     const newMarqueId = e.target.value;
     setMarqueId(newMarqueId);
 
@@ -255,7 +327,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
   };
 
   // Handle fournisseur selection
-  const handleFournisseurChange = (e : any) => {
+  const handleFournisseurChange = (e: any) => {
     const newFournisseurId = e.target.value;
     setFournisseurId(newFournisseurId);
   };
@@ -311,10 +383,10 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     setFiles(newFiles);
   };
 
-  // Validate form fields
+  // Validate form fields including serial number uniqueness and warranty date
   const validateStep1 = (): boolean => {
     const errors = {
-      serialNumber: !serialNumber,
+      serialNumber: !serialNumber.trim() || serialExists,
       actifType: !actifType,
       actifTypeId: !actifTypeId,
       marqueId: !marqueId,
@@ -324,6 +396,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
       etatId: !etatId,
       fournisseurId: !useMultipleSuppliers && !fournisseurId,
       supplierAllocations: useMultipleSuppliers && !supplierAllocationsValid,
+      warrantyEnd: !warrantyEnd.trim(), // Validate warranty end date is not empty
     };
 
     setFormErrors(errors);
@@ -356,6 +429,12 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     setEtatId("");
     setQuantity(1);
     setWarrantyEnd("");
+
+    // Reset serial number validation state
+    setSerialExists(false);
+    setIsCheckingSerial(false);
+    setSerialTouched(false);
+    setWarrantyTouched(false); // Reset warranty touched state
 
     // Reset supplier mode
     setUseMultipleSuppliers(false);
@@ -394,6 +473,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
       etatId: false,
       fournisseurId: false,
       supplierAllocations: false,
+      warrantyEnd: false, // Reset warranty error state
     });
   };
 
@@ -481,10 +561,8 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
 
     formData.append("quantity", quantity.toString());
 
-    // For software, use warrantyEnd as expiration date
-    if (warrantyEnd) {
-      formData.append("warrantyEnd", warrantyEnd);
-    }
+    // Always include warranty end date (now required)
+    formData.append("warrantyEnd", warrantyEnd);
 
     // Handle employee assignment
     if (assignToEmployee) {
@@ -630,17 +708,28 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               )}
             </FormControl>
 
-            {/* Serial Number */}
+            {/* Serial Number with uniqueness validation */}
             <TextField
               label="Numéro de série"
               value={serialNumber}
-              onChange={(e) => setSerialNumber(e.target.value)}
+              onChange={handleSerialNumberChange}
               required
-              error={formErrors.serialNumber}
+              error={formErrors.serialNumber || (serialTouched && serialExists)}
               helperText={
-                formErrors.serialNumber ? "Numéro de série requis" : ""
+                formErrors.serialNumber && !serialExists
+                  ? "Numéro de série requis"
+                  : serialExists
+                  ? "Ce numéro de série existe déjà"
+                  : ""
               }
               fullWidth
+              InputProps={{
+                endAdornment: isCheckingSerial ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : serialTouched && serialNumber.trim() && !serialExists ? (
+                  <span className="text-green-500">✓</span>
+                ) : null,
+              }}
             />
 
             {/* ActifType Selection with loading indicator */}
@@ -764,7 +853,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               inputProps={{ min: 1 }}
             />
 
-            {/* Warranty End Date */}
+            {/* Warranty End Date - Now required */}
             <TextField
               label={
                 isSoftwareCategory
@@ -773,14 +862,20 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               }
               type="date"
               value={warrantyEnd}
-              onChange={(e) => setWarrantyEnd(e.target.value)}
+              onChange={handleWarrantyEndChange}
               fullWidth
-              InputLabelProps={{ shrink: true }}
+              required
+              error={formErrors.warrantyEnd}
               helperText={
-                isSoftwareCategory
-                  ? "Date d&apos;expiration de la licence"
+                formErrors.warrantyEnd
+                  ? isSoftwareCategory
+                    ? "Date d'expiration requise"
+                    : "Date de fin de garantie requise"
+                  : isSoftwareCategory
+                  ? "Date d'expiration de la licence"
                   : "Date de fin de garantie"
               }
+              InputLabelProps={{ shrink: true }}
             />
 
             {/* Divider for supplier section */}
@@ -1139,7 +1234,12 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
         {activeStep === 0 ? (
           <>
             <Button onClick={handleCloseModal}>Annuler</Button>
-            <Button onClick={handleNext} color="primary" variant="contained">
+            <Button
+              onClick={handleNext}
+              color="primary"
+              variant="contained"
+              disabled={isCheckingSerial} // Disable Next button while checking serial
+            >
               Suivant
             </Button>
           </>
@@ -1175,3 +1275,4 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
 };
 
 export default CreateActifModal;
+

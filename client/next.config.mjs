@@ -22,7 +22,7 @@ const nextConfig = {
 
       {
 
-        protocol: "http", // Change to https after SSL setup
+        protocol: "https", // Change to https after SSL setup
 
         hostname: "intranet.insight-times.com",
 

@@ -2,7 +2,12 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
-const prisma = new PrismaClient();
+
+
+const prisma =
+  new PrismaClient({
+    datasources: { db: { url: process.env.LAGOM_DATABASE_URL } },
+  });
 
 /**
  * Normalizes a string to be used as a hashtag

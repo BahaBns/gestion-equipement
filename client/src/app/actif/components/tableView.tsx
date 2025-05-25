@@ -423,6 +423,102 @@ const ActifsTableView = ({
     return "Non spécifié";
   };
 
+  // UPDATED: Fixed download function for actif attachments
+  const handleDownloadAttachment = async (
+    attachmentId: string,
+    fileName: string
+  ) => {
+    try {
+      // Create a URL using the download endpoint
+      const downloadUrl = `${
+        process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
+      }/attachments/${attachmentId}/download`;
+
+      // Get the authorization token
+      const token = localStorage.getItem("token");
+
+      // Fetch the file with authorization
+      const response = await fetch(downloadUrl, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Download failed: ${response.status} ${response.statusText}`
+        );
+      }
+
+      // Get the blob from the response
+      const blob = await response.blob();
+
+      // Create a download link and trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error downloading attachment:", error);
+      alert("Erreur lors du téléchargement. Veuillez réessayer.");
+    }
+  };
+
+  // UPDATED: Fixed download function for license attachments
+  const handleDownloadLicenseAttachment = async (
+    attachmentId: string,
+    fileName: string
+  ) => {
+    try {
+      // Create a URL using the download endpoint
+      const downloadUrl = `${
+        process.env.NEXT_PUBLIC_API_BASE_URL || "/api"
+      }/license-attachments/${attachmentId}/download`;
+
+      // Get the authorization token
+      const token = localStorage.getItem("token");
+
+      // Fetch the file with authorization
+      const response = await fetch(downloadUrl, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Download failed: ${response.status} ${response.statusText}`
+        );
+      }
+
+      // Get the blob from the response
+      const blob = await response.blob();
+
+      // Create a download link and trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error downloading license attachment:", error);
+      alert("Erreur lors du téléchargement. Veuillez réessayer.");
+    }
+  };
+
   // Modal for showing actif specification details
   const SpecificationDetailsModal = () => {
     if (!selectedActif) return null;
@@ -444,7 +540,8 @@ const ActifsTableView = ({
                   {selectedActif.specification.cpu || "Non spécifié"}
                 </p>
                 <p>
-                  <span className="font-medium">RAM:</span>{" "}
+                  <span className="font-medium">RAM:</span>
+                  {" + "}
                   {selectedActif.specification.ram || "Non spécifié"}
                 </p>
                 <p>
@@ -466,7 +563,7 @@ const ActifsTableView = ({
                 <span className="font-medium">Numéro de série:</span>{" "}
                 {selectedActif.serialNumber}
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-col space-y-2">
                 <p>
                   <span className="font-medium">Status:</span>{" "}
                   <span
@@ -474,7 +571,7 @@ const ActifsTableView = ({
                       selectedActif.status?.name
                     )}`}
                   >
-                    {selectedActif.status?.name}
+                    {getStatusQuantitiesSummary(selectedActif)}
                   </span>
                 </p>
                 {selectedActif.etat && (
@@ -485,7 +582,7 @@ const ActifsTableView = ({
                         selectedActif.etat?.name
                       )}`}
                     >
-                      {selectedActif.etat?.name}
+                      {getEtatQuantitiesSummary(selectedActif)}
                     </span>
                   </p>
                 )}
@@ -621,6 +718,41 @@ const ActifsTableView = ({
               )}
             </div>
 
+            {/* Attribution section */}
+            <div className="mt-4">
+              <h4 className="font-medium mb-2">Attribution</h4>
+              {selectedActif.employees && selectedActif.employees.length > 0 ? (
+                <div>
+                  <ul className="space-y-1">
+                    {selectedActif.employees.map((emp, index) => (
+                      <li key={index}>
+                        <span className="font-medium">{emp.nom}</span> -{" "}
+                        {emp.quantity} unité(s)
+                        {emp.email && (
+                          <span className="text-gray-500 ml-1">
+                            ({emp.email})
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  {calculateLibreQuantity(selectedActif) > 0 && (
+                    <p className="mt-2 text-gray-600">
+                      Unités disponibles:{" "}
+                      {calculateLibreQuantity(selectedActif)}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-gray-500">
+                  {selectedActif.quantity > 1
+                    ? `${selectedActif.quantity} unités disponibles`
+                    : "Non attribué"}
+                </p>
+              )}
+            </div>
+
+            {/* UPDATED: Attachments section with fixed download functionality */}
             {selectedActif.attachments &&
               selectedActif.attachments.length > 0 && (
                 <div className="mt-4">
@@ -631,16 +763,18 @@ const ActifsTableView = ({
                     {selectedActif.attachments.map((attachment) => (
                       <li
                         key={attachment.attachmentId}
-                        className="text-blue-600 underline"
+                        className="text-blue-600 underline cursor-pointer"
                       >
-                        <a
-                          href={attachment.fileUrl}
-                          download={attachment.fileName}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <span
+                          onClick={() =>
+                            handleDownloadAttachment(
+                              attachment.attachmentId,
+                              attachment.fileName
+                            )
+                          }
                         >
                           {attachment.fileName}
-                        </a>
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -694,7 +828,7 @@ const ActifsTableView = ({
                 <span className="font-medium">Quantité:</span>{" "}
                 {selectedLicense.licenseQuantity}
               </p>
-              <div className="flex space-x-2">
+              <div className="flex flex-col space-y-2">
                 <p>
                   <span className="font-medium">Status:</span>{" "}
                   <span
@@ -702,7 +836,10 @@ const ActifsTableView = ({
                       selectedLicense.status?.name
                     )}`}
                   >
-                    {selectedLicense.status?.name}
+                    {selectedLicense.status?.name || "Non défini"}
+                    {selectedLicense.licenseQuantity > 1
+                      ? ` (${selectedLicense.licenseQuantity})`
+                      : ""}
                   </span>
                 </p>
                 {selectedLicense.etat && (
@@ -713,7 +850,10 @@ const ActifsTableView = ({
                         selectedLicense.etat?.name
                       )}`}
                     >
-                      {selectedLicense.etat?.name}
+                      {selectedLicense.etat?.name || "Non défini"}
+                      {selectedLicense.licenseQuantity > 1
+                        ? ` (${selectedLicense.licenseQuantity})`
+                        : ""}
                     </span>
                   </p>
                 )}
@@ -766,6 +906,7 @@ const ActifsTableView = ({
               )}
             </div>
 
+            {/* UPDATED: License attachments section with fixed download functionality */}
             {selectedLicense.attachments &&
               selectedLicense.attachments.length > 0 && (
                 <div className="mt-4">
@@ -776,36 +917,67 @@ const ActifsTableView = ({
                     {selectedLicense.attachments.map((attachment) => (
                       <li
                         key={attachment.attachmentId}
-                        className="text-blue-600 underline"
+                        className="text-blue-600 underline cursor-pointer"
                       >
-                        <a
-                          href={attachment.fileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <span
+                          onClick={() =>
+                            handleDownloadLicenseAttachment(
+                              attachment.attachmentId,
+                              attachment.fileName
+                            )
+                          }
                         >
                           {attachment.fileName}
-                        </a>
+                        </span>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
 
-            {selectedLicense.employees &&
-              selectedLicense.employees.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="font-medium mb-2">
-                    Utilisateurs ({selectedLicense.employees.length})
-                  </h4>
+            {/* Attribution section */}
+            <div className="mt-4">
+              <h4 className="font-medium mb-2">Attribution</h4>
+              {selectedLicense.employees &&
+              selectedLicense.employees.length > 0 ? (
+                <div>
                   <ul className="space-y-1">
                     {selectedLicense.employees.map((emp, index) => (
                       <li key={index}>
-                        {emp.nom} - {emp.quantity} licence(s)
+                        <span className="font-medium">{emp.nom}</span> -{" "}
+                        {emp.quantity} licence(s)
+                        {emp.email && (
+                          <span className="text-gray-500 ml-1">
+                            ({emp.email})
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>
+                  {selectedLicense.licenseQuantity -
+                    selectedLicense.employees.reduce(
+                      (sum, emp) => sum + (emp.quantity || 0),
+                      0
+                    ) >
+                    0 && (
+                    <p className="mt-2 text-gray-600">
+                      Licences disponibles:{" "}
+                      {selectedLicense.licenseQuantity -
+                        selectedLicense.employees.reduce(
+                          (sum, emp) => sum + (emp.quantity || 0),
+                          0
+                        )}
+                    </p>
+                  )}
                 </div>
+              ) : (
+                <p className="text-gray-500">
+                  {selectedLicense.licenseQuantity > 1
+                    ? `${selectedLicense.licenseQuantity} licences disponibles`
+                    : "Non attribuée"}
+                </p>
               )}
+            </div>
           </div>
 
           <div className="mt-6 flex justify-end">

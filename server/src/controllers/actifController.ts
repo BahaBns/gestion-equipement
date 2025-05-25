@@ -143,6 +143,8 @@ export const getActifs = async (req: Request, res: Response): Promise<void> => {
     // Transform the data to make it easier to work with in the frontend
     const transformedActifs = actifs.map((actif) => ({
       ...actif,
+      marqueObj: actif.marque, // Rename marque to marqueObj
+      modeleObj: actif.modele, // Rename modele to modeleObj
       employees: actif.employees.map((ea) => ({
         ...ea.employee,
         quantity: ea.quantity,
@@ -1839,6 +1841,8 @@ export const getActifsByStatus = async (
     // Transform the data to make it easier to work with in the frontend
     const transformedActifs = actifs.map((actif) => ({
       ...actif,
+      marqueObj: actif.marque, // Rename marque to marqueObj
+      modeleObj: actif.modele, // Rename modele to modeleObj
       employees: actif.employees.map((ea) => ({
         ...ea.employee,
         quantity: ea.quantity,
@@ -1915,6 +1919,8 @@ export const getActifsByActifType = async (
     // Transform the data to make it easier to work with in the frontend
     const transformedActifs = actifs.map((actif) => ({
       ...actif,
+      marqueObj: actif.marque, // Rename marque to marqueObj
+      modeleObj: actif.modele, // Rename modele to modeleObj
       employees: actif.employees.map((ea) => ({
         ...ea.employee,
         quantity: ea.quantity,
@@ -1992,6 +1998,8 @@ export const getActifsByEtat = async (
     // Transform the data to make it easier to work with in the frontend
     const transformedActifs = actifs.map((actif) => ({
       ...actif,
+      marqueObj: actif.marque, // Rename marque to marqueObj
+      modeleObj: actif.modele, // Rename modele to modeleObj
       employees: actif.employees.map((ea) => ({
         ...ea.employee,
         quantity: ea.quantity,

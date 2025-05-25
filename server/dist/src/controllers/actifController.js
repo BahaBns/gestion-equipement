@@ -132,7 +132,7 @@ const getActifs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
         });
         // Transform the data to make it easier to work with in the frontend
-        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity }))), 
+        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { marqueObj: actif.marque, modeleObj: actif.modele, employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity }))), 
             // Transform supplier data for easier frontend consumption
             suppliers: actif.fournisseurs.map((af) => ({
                 fournisseurId: af.fournisseur.fournisseurId,
@@ -1533,7 +1533,7 @@ const getActifsByStatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
             },
         });
         // Transform the data to make it easier to work with in the frontend
-        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), suppliers: actif.fournisseurs.map((af) => ({
+        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { marqueObj: actif.marque, modeleObj: actif.modele, employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), suppliers: actif.fournisseurs.map((af) => ({
                 fournisseurId: af.fournisseur.fournisseurId,
                 name: af.fournisseur.name,
                 email: af.fournisseur.email,
@@ -1593,7 +1593,7 @@ const getActifsByActifType = (req, res) => __awaiter(void 0, void 0, void 0, fun
             },
         });
         // Transform the data to make it easier to work with in the frontend
-        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), suppliers: actif.fournisseurs.map((af) => ({
+        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { marqueObj: actif.marque, modeleObj: actif.modele, employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), suppliers: actif.fournisseurs.map((af) => ({
                 fournisseurId: af.fournisseur.fournisseurId,
                 name: af.fournisseur.name,
                 email: af.fournisseur.email,
@@ -1654,7 +1654,7 @@ const getActifsByEtat = (req, res) => __awaiter(void 0, void 0, void 0, function
             },
         });
         // Transform the data to make it easier to work with in the frontend
-        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), suppliers: actif.fournisseurs.map((af) => ({
+        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { marqueObj: actif.marque, modeleObj: actif.modele, employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), suppliers: actif.fournisseurs.map((af) => ({
                 fournisseurId: af.fournisseur.fournisseurId,
                 name: af.fournisseur.name,
                 email: af.fournisseur.email,

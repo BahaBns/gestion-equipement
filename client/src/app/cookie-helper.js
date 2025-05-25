@@ -22,8 +22,6 @@
     
     // If token in localStorage but not in cookie, set cookie
     if (token && !hasCookie) {
-      const expires = new Date();
-      expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
       
       // Set the cookie with proper attributes
       document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;

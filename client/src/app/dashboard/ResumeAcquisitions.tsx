@@ -13,6 +13,8 @@ interface EtatCount {
   actifs: number;
   licenses: number;
   total: number;
+  assigned: number;
+  available: number;
 }
 
 interface EtatData {
@@ -20,6 +22,8 @@ interface EtatData {
   value: number;
   actifs: number;
   licenses: number;
+  assigned: number;
+  available: number;
   percentage: string;
 }
 
@@ -32,6 +36,8 @@ interface EtatColorMap {
   "Mauvais état": string;
   Obsolète: string;
   "En réparation": string;
+  "En service": string;
+  "En stock": string;
   Autre: string;
 }
 
@@ -70,6 +76,8 @@ const CardEtatEquipmentSummary = () => {
     Obsolète: "#FF0000", // Red for obsolete - keep this color
     "En réparation":
       databaseName.toLowerCase() === "insight" ? "#166534" : "#8884D8", // Purple/Green for in repair
+    "En service": "#00C49F", // Green for in-service
+    "En stock": "#0088FE", // Blue for in-stock
     Autre: "#A0A0A0", // Gray for other conditions - keep this color
   };
 
@@ -77,6 +85,22 @@ const CardEtatEquipmentSummary = () => {
   const { data: actifs, isLoading: actifLoading } = useGetActifsQuery();
   const { data: licenses, isLoading: licenseLoading } = useGetLicensesQuery();
   const { data: etats } = useGetEtatsQuery();
+
+  // Function to calculate assigned quantity for an actif
+  const calculateAssignedQuantity = (actif: any): number => {
+    if (!actif.employees || actif.employees.length === 0) return 0;
+    return actif.employees.reduce(
+      (total: number, emp: any) => total + (emp.quantity || 0),
+      0
+    );
+  };
+
+  // Function to calculate available quantity for an actif
+  const calculateLibreQuantity = (actif: any): number => {
+    const totalQuantity = actif.quantity || 0;
+    const assignedQuantity = calculateAssignedQuantity(actif);
+    return Math.max(0, totalQuantity - assignedQuantity);
+  };
 
   // Calculate equipment by etat
   const calculateEquipmentByEtat = (): EtatData[] => {
@@ -93,11 +117,20 @@ const CardEtatEquipmentSummary = () => {
           actifs: 0,
           licenses: 0,
           total: 0,
+          assigned: 0,
+          available: 0,
         };
       }
-      // Use Quantity field instead of incrementing by 1
+
+      // Calculate assigned and available quantities
+      const assignedQuantity = calculateAssignedQuantity(actif);
+      const availableQuantity = calculateLibreQuantity(actif);
+
+      // Update etat counts
       etatCounts[etatName].actifs += actif.quantity;
       etatCounts[etatName].total += actif.quantity;
+      etatCounts[etatName].assigned += assignedQuantity;
+      etatCounts[etatName].available += availableQuantity;
     });
 
     // Group licenses by etat and count
@@ -108,11 +141,27 @@ const CardEtatEquipmentSummary = () => {
           actifs: 0,
           licenses: 0,
           total: 0,
+          assigned: 0,
+          available: 0,
         };
       }
       // Use licenseQuantity field for licenses
       etatCounts[etatName].licenses += license.licenseQuantity;
       etatCounts[etatName].total += license.licenseQuantity;
+
+      // For licenses, we consider them all as "assigned" if they have employees
+      // or "available" if they don't
+      if (license.employees && license.employees.length > 0) {
+        const assignedLicenseQuantity = license.employees.reduce(
+          (sum: number, emp: any) => sum + (emp.quantity || 0),
+          0
+        );
+        etatCounts[etatName].assigned += assignedLicenseQuantity;
+        etatCounts[etatName].available +=
+          license.licenseQuantity - assignedLicenseQuantity;
+      } else {
+        etatCounts[etatName].available += license.licenseQuantity;
+      }
     });
 
     // Convert the object to array for Recharts
@@ -121,6 +170,9 @@ const CardEtatEquipmentSummary = () => {
       value: counts.total,
       actifs: counts.actifs,
       licenses: counts.licenses,
+      assigned: counts.assigned,
+      available: counts.available,
+      percentage: "0", // Will be calculated below
     }));
 
     // Sort by value (count) in descending order
@@ -131,10 +183,7 @@ const CardEtatEquipmentSummary = () => {
 
     // Calculate percentages for etats
     return etatArray.map((etat) => ({
-      name: etat.name,
-      value: etat.value,
-      actifs: etat.actifs,
-      licenses: etat.licenses,
+      ...etat,
       percentage: ((Number(etat.value) / totalCount) * 100).toFixed(1),
     }));
   };
@@ -171,6 +220,20 @@ const CardEtatEquipmentSummary = () => {
 
     // Default fallback
     return "#A0A0A0";
+  };
+
+  // Format etat display text
+  const getEtatDisplayText = (etat: EtatData): string => {
+    // If there's a mix of assigned and available, show the breakdown
+    if (etat.assigned > 0 && etat.available > 0) {
+      const assignedEtat = "En service"; // Default état for assigned items
+      const availableEtat = "En stock"; // Default état for available items
+
+      return `${etat.assigned} ${assignedEtat}, ${etat.available} ${availableEtat}`;
+    }
+
+    // If all quantities have the same état
+    return `${etat.value} ${etat.name}`;
   };
 
   return (
@@ -226,7 +289,8 @@ const CardEtatEquipmentSummary = () => {
                     className="mr-2 w-3 h-3 rounded-full"
                     style={{ backgroundColor: getEtatColor(entry.name) }}
                   ></span>
-                  {entry.name}: {entry.percentage}% ({entry.value})
+                  {entry.name}: {entry.percentage}% ({getEtatDisplayText(entry)}
+                  )
                   <span className="ml-1 text-gray-500">
                     (Équip: {entry.actifs}, Lic: {entry.licenses})
                   </span>

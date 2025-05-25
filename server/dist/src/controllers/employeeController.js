@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeActifs = exports.assignActifs = exports.deleteEmployee = exports.createEmployee = exports.getEmployees = void 0;
+exports.modifyEmployee = exports.removeActifs = exports.assignActifs = exports.deleteEmployee = exports.createEmployee = exports.getEmployees = void 0;
 const client_1 = require("@prisma/client");
 const lagomPrisma = new client_1.PrismaClient({
     datasources: { db: { url: process.env.LAGOM_DATABASE_URL } },
@@ -281,3 +281,51 @@ const removeActifs = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.removeActifs = removeActifs;
+/**
+ * Update/modify an existing employee
+ */
+const modifyEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const prisma = getPrismaClient(req);
+        const { employeeId } = req.params;
+        const { nom, email } = req.body;
+        // Check if employee exists
+        const employee = yield prisma.employee.findUnique({
+            where: { employeeId },
+        });
+        if (!employee) {
+            res.status(404).json({ message: "Employee not found" });
+            return;
+        }
+        // Update the employee
+        const updatedEmployee = yield prisma.employee.update({
+            where: { employeeId },
+            data: Object.assign(Object.assign({}, (nom && { nom })), (email && { email })),
+            include: {
+                actifs: {
+                    include: {
+                        actif: true,
+                    },
+                },
+                licenses: {
+                    include: {
+                        license: {
+                            include: {
+                                status: true,
+                                licensetype: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        // Transform the data structure to match the getEmployees format
+        const transformedEmployee = Object.assign(Object.assign({}, updatedEmployee), { actifs: updatedEmployee.actifs.map((ea) => (Object.assign(Object.assign({}, ea.actif), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), licenses: updatedEmployee.licenses.map((el) => (Object.assign(Object.assign({}, el.license), { quantity: el.quantity, assignedAt: el.assignedAt }))) });
+        res.status(200).json(transformedEmployee);
+    }
+    catch (error) {
+        console.error("Error updating employee:", error);
+        res.status(500).json({ message: "Error updating employee", error });
+    }
+});
+exports.modifyEmployee = modifyEmployee;

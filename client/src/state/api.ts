@@ -393,6 +393,27 @@ export interface Fournisseur {
   phone?: string; // New field
 }
 
+
+export interface RequestPasswordResetRequest {
+  email: string;
+}
+
+export interface RequestPasswordResetResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+
 // create a base query function
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "/api",
@@ -479,6 +500,29 @@ export const api = createApi({
         body: credentials,
       }),
     }),
+
+requestPasswordReset: build.mutation<
+      RequestPasswordResetResponse,
+      RequestPasswordResetRequest
+>({
+      query: (body) => ({
+        url: "/auth/request-password-reset",
+        method: "POST",
+        body: body, // e.g., { email: "user@example.com" }
+      }),
+    }),
+
+    resetPassword: build.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+      query: (body) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: body, // e.g., { token: "reset_token_from_email", newPassword: "newSecurePassword123" }
+      }),
+    }),
+
+
+
+
 
     // Actif Endpoints
     getActifs: build.query<Actif[], string | void>({
@@ -567,6 +611,19 @@ export const api = createApi({
       }),
       invalidatesTags: ["Actifs", "ExpiringActifs"],
     }),
+
+	updateEmployee: build.mutation<
+  Employee,
+  { employeeId: string; nom?: string; email?: string }
+>({
+  query: ({ employeeId, ...data }) => ({
+    url: `/employee/${employeeId}`,
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Employees"],
+}),
+
 
     // *** ETAT ENDPOINTS (New) ***
     getEtats: build.query<Etat[], void>({
@@ -1774,7 +1831,8 @@ export const {
 
   // Export the hook at the bottom of the file with other exports
   useSelectDatabaseMutation,
-
+  useRequestPasswordResetMutation,
+  useResetPasswordMutation,
   useLoginMutation,
 
   // New license acceptance exports
@@ -1865,6 +1923,7 @@ export const {
   useDeleteEmployeeMutation,
   useAssignActifsMutation,
   useRemoveActifsMutation,
+  useUpdateEmployeeMutation,
 
   // Licenses
   useGetLicensesQuery,

@@ -80,8 +80,8 @@ const sendAssignmentNotification = (employee_1, actifs_1, acceptanceToken_1, ...
         const equipmentList = actifsWithDetails
             .map((actif) => `
       <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;">${actif.actifType} </td>
         <td style="padding: 8px; border: 1px solid #ddd;">${actif.marqueName} ${actif.modeleName}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${actif.serialNumber}</td>
       </tr>
     `)
             .join("");
@@ -232,8 +232,8 @@ const sendAcceptanceConfirmation = (employee_1, actifs_1, ...args_1) => __awaite
         const equipmentList = actifsWithDetails
             .map((actif) => `
       <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;">${actif.actifType}</td>
         <td style="padding: 8px; border: 1px solid #ddd;">${actif.marqueName} ${actif.modeleName}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${actif.serialNumber}</td>
       </tr>
     `)
             .join("");

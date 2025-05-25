@@ -14,6 +14,8 @@ model User {
   password       String
   name           String?
   databaseAccess DatabaseAccess[]
+   passwordResetToken            String?   @unique 
+  passwordResetTokenExpiresAt   DateTime? 
 }
 
 model DatabaseAccess {

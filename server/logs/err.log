@@ -1,1705 +1,126 @@
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+Login Error: PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Authentication failed against database server at `Localhost`, the provided database credentials for `postgres` are not valid.
+
+Please make sure to provide valid database credentials for the database server at `Localhost`.
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Login Error: PrismaClientInitializationError: 
+Invalid `prisma.user.findUnique()` invocation:
+
+
+Authentication failed against database server at `Localhost`, the provided database credentials for `postgres` are not valid.
+
+Please make sure to provide valid database credentials for the database server at `Localhost`.
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/auth-client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:14
+   | 
+13 |   provider = "postgresql"
+14 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:14
+   | 
+13 |   provider = "postgresql"
+14 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:14
+   | 
+13 |   provider = "postgresql"
+14 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:14
+   | 
+13 |   provider = "postgresql"
+14 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:14
+   | 
+13 |   provider = "postgresql"
+14 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
 }
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
-PrismaClientInitializationError: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-3.0.x".
-
-This happened because Prisma Client was generated for "windows", but the actual deployment required "rhel-openssl-3.0.x".
-Add "rhel-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
-The following locations have been searched:
-  /opt/gestion-equipements-IT/server/node_modules/.prisma/client
-  /opt/gestion-equipements-IT/server/node_modules/@prisma/client
-  C:\Users\baha\ang\lagom prj\test\server\node_modules\@prisma\client
-  /tmp/prisma-engines
-  /opt/gestion-equipements-IT/server/prisma
-    at tl (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:64:805)
-    at async Object.loadLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:8993)
-    at async _r.loadEngine (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:112:448)
-    at async _r.instantiateLibrary (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:111:12367)
-Database selection error: JsonWebTokenError: jwt malformed
-    at module.exports [as verify] (/opt/gestion-equipements-IT/server/node_modules/jsonwebtoken/verify.js:70:17)
-    at /opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:87:48
-    at Generator.next (<anonymous>)
-    at /opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:4:12)
-    at selectDatabase (/opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:77:38)
-    at Layer.handle [as handle_request] (/opt/gestion-equipements-IT/server/node_modules/express/lib/router/layer.js:95:5)
-    at next (/opt/gestion-equipements-IT/server/node_modules/express/lib/router/route.js:149:13)
-    at Route.dispatch (/opt/gestion-equipements-IT/server/node_modules/express/lib/router/route.js:119:3)
-Database selection error: JsonWebTokenError: jwt malformed
-    at module.exports [as verify] (/opt/gestion-equipements-IT/server/node_modules/jsonwebtoken/verify.js:70:17)
-    at /opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:87:48
-    at Generator.next (<anonymous>)
-    at /opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (/opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:4:12)
-    at selectDatabase (/opt/gestion-equipements-IT/server/dist/src/controllers/authController.js:77:38)
-    at Layer.handle [as handle_request] (/opt/gestion-equipements-IT/server/node_modules/express/lib/router/layer.js:95:5)
-    at next (/opt/gestion-equipements-IT/server/node_modules/express/lib/router/route.js:149:13)
-    at Route.dispatch (/opt/gestion-equipements-IT/server/node_modules/express/lib/router/route.js:119:3)
 Error processing expired assignments: PrismaClientInitializationError: 
 Invalid `prisma.assignmentToken.findMany()` invocation:
 
@@ -1814,8 +235,8 @@ Validation Error Count: 1
   clientVersion: '6.2.1',
   errorCode: undefined
 }
-Error auto-tagging actif OR001034: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
 
 
 error: Environment variable not found: DATABASE_URL.
@@ -1833,65 +254,8 @@ Validation Error Count: 1
   clientVersion: '6.2.1',
   errorCode: undefined
 }
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
-
-
-error: Environment variable not found: DATABASE_URL.
-  -->  schema.prisma:14
-   | 
-13 |   provider = "postgresql"
-14 |   url      = env("DATABASE_URL")
-   | 
-
-Validation Error Count: 1
-    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
-    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
-    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
-    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
-  clientVersion: '6.2.1',
-  errorCode: undefined
-}
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
-
-
-error: Environment variable not found: DATABASE_URL.
-  -->  schema.prisma:14
-   | 
-13 |   provider = "postgresql"
-14 |   url      = env("DATABASE_URL")
-   | 
-
-Validation Error Count: 1
-    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
-    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
-    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
-    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
-  clientVersion: '6.2.1',
-  errorCode: undefined
-}
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
-
-
-error: Environment variable not found: DATABASE_URL.
-  -->  schema.prisma:14
-   | 
-13 |   provider = "postgresql"
-14 |   url      = env("DATABASE_URL")
-   | 
-
-Validation Error Count: 1
-    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
-    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
-    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
-    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
-  clientVersion: '6.2.1',
-  errorCode: undefined
-}
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
 
 
 error: Environment variable not found: DATABASE_URL.
@@ -1947,8 +311,8 @@ Validation Error Count: 1
   clientVersion: '6.2.1',
   errorCode: undefined
 }
-Error auto-tagging actif OR001034: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
 
 
 error: Environment variable not found: DATABASE_URL.
@@ -1966,8 +330,8 @@ Validation Error Count: 1
   clientVersion: '6.2.1',
   errorCode: undefined
 }
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
 
 
 error: Environment variable not found: DATABASE_URL.
@@ -1985,8 +349,8 @@ Validation Error Count: 1
   clientVersion: '6.2.1',
   errorCode: undefined
 }
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
 
 
 error: Environment variable not found: DATABASE_URL.
@@ -2004,8 +368,27 @@ Validation Error Count: 1
   clientVersion: '6.2.1',
   errorCode: undefined
 }
-Error auto-tagging actif EC004088: PrismaClientInitializationError: 
-Invalid `prisma.actif.findUnique()` invocation:
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:14
+   | 
+13 |   provider = "postgresql"
+14 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at Vn.handleRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:7640)
+    at Vn.handleAndLogRequestError (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6663)
+    at Vn.request (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:121:6370)
+    at async l (/opt/gestion-equipements-IT/server/node_modules/@prisma/client/runtime/library.js:130:9617) {
+  clientVersion: '6.2.1',
+  errorCode: undefined
+}
+Error processing expired assignments: PrismaClientInitializationError: 
+Invalid `prisma.assignmentToken.findMany()` invocation:
 
 
 error: Environment variable not found: DATABASE_URL.

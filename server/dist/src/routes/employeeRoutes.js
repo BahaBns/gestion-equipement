@@ -7,6 +7,7 @@ const router = (0, express_1.Router)();
 router.get("/", employeeController_1.getEmployees);
 // Create a new employee
 router.post("/", employeeController_1.createEmployee);
+router.put("/:employeeId", employeeController_1.modifyEmployee);
 // Assign actifs to an employee
 router.post("/:employeeId/assign-actifs", employeeController_1.assignActifs);
 // Remove actifs from an employee

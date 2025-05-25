@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-"generate-auth": "prisma generate --schema=./prisma/auth.prisma",
+    "generate-auth": "prisma generate --schema=./prisma/auth.prisma",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && npx tsc",
     "start": "npm run build && node dist/index.js",

@@ -1,22 +1,39 @@
 // utils/auth.ts
 import { setCookie, deleteCookie, getCookie } from "cookies-next";
 
+
+
+
 // Create a unique session ID when the browser loads
+// utils/auth.ts
 export const initSession = () => {
   if (typeof window !== "undefined") {
     // Check if the browser was closed by comparing sessionStorage
     const sessionCheck = sessionStorage.getItem("browser_session_active");
 
     if (!sessionCheck) {
-      // Browser was closed and reopened - clear localStorage token
+      // Browser was closed and reopened - clear localStorage token and cookies
       localStorage.removeItem("token");
       localStorage.removeItem("selectedDatabase");
+      
+      // Also clear cookies
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax";
+      document.cookie = "selectedDatabase=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax";
+      
+      // If you have HTTP-only cookies set by the server, you may need an API call to clear those
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/clear-session`, {
+        method: 'POST',
+        credentials: 'include'
+      }).catch(err => console.log("Failed to clear server cookies:", err));
     }
 
     // Set session marker in sessionStorage (will be cleared when browser closes)
     sessionStorage.setItem("browser_session_active", "true");
   }
 };
+
+
+
 
 // Improved cookie setting function
 export const setAuthToken = (token: string, selectedDatabase?: string) => {
@@ -33,7 +50,6 @@ export const setAuthToken = (token: string, selectedDatabase?: string) => {
     path: "/",                                // Make sure this cookie applies to all paths
     secure: process.env.NODE_ENV === "production", // Secure in production only
     sameSite: "lax",                          // Important for cross-page navigation
-    maxAge: 60 * 60 * 24 * 7,                 // 7 days in seconds
     // Do NOT set httpOnly: true, as we need JavaScript access
   });
 
@@ -44,7 +60,6 @@ export const setAuthToken = (token: string, selectedDatabase?: string) => {
       path: "/",
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7,
     });
   }
 };

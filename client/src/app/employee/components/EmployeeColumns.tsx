@@ -24,7 +24,7 @@ export const getEmployeeColumns = ({
     { field: "email", headerName: "Email", width: 250 },
     {
       field: "actifCount",
-      headerName: "Equipements",
+      headerName: "Équipements",
       width: 170,
       renderCell: (params) => {
         // Get all actifs assigned to this employee

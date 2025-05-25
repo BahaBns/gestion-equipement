@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash"; // Import debounce from lodash
 import {
   Dialog,
   DialogContent,
@@ -42,6 +43,7 @@ import {
   useGetMarquesByActifTypeQuery,
   useGetModelesByMarqueQuery,
   useGetFournisseursQuery,
+  useGetActifBySerialNumberQuery, // Import the query hook for serial number check
 } from "@/state/api";
 
 interface FileUploadComponentProps {
@@ -185,6 +187,9 @@ const EditActifModal = ({
 }: EditActifModalProps) => {
   // Form state
   const [serialNumber, setSerialNumber] = useState(actif?.serialNumber || "");
+  const [originalSerialNumber, setOriginalSerialNumber] = useState(
+    actif?.serialNumber || ""
+  );
   const [actifTypeId, setActifTypeId] = useState(actif?.actifTypeId || "");
   const [actifType, setActifType] = useState(actif?.actifType || "");
   const [statusId, setStatusId] = useState(actif?.statusId || "");
@@ -195,9 +200,12 @@ const EditActifModal = ({
   // New fields for relational data
   const [marqueId, setMarqueId] = useState(actif?.marqueId || "");
   const [modeleId, setModeleId] = useState(actif?.modeleId || "");
-  const [fournisseurId, setFournisseurId] = useState(
-    actif?.fournisseurId || ""
-  );
+  const [fournisseurId, setFournisseurId] = useState("");
+
+  // Serial number validation states
+  const [isCheckingSerial, setIsCheckingSerial] = useState(false);
+  const [serialExists, setSerialExists] = useState(false);
+  const [serialTouched, setSerialTouched] = useState(false);
 
   // State for specifications
   const [showSpecifications, setShowSpecifications] = useState(
@@ -231,6 +239,28 @@ const EditActifModal = ({
   const { data: fournisseurs = [], isLoading: isLoadingFournisseurs } =
     useGetFournisseursQuery();
 
+  // Set up the query hook for checking serial number uniqueness
+  const { data: existingActif, isLoading: isSerialCheckLoading } =
+    useGetActifBySerialNumberQuery(serialNumber, {
+      skip:
+        !serialNumber ||
+        !isCheckingSerial ||
+        serialNumber === originalSerialNumber,
+      // This will only run the query when we explicitly want to check
+      // and when the serial number has changed from original
+    });
+
+  // Create a debounced version of the serial check function
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedCheckSerialNumber = useCallback(
+    debounce((serial: string) => {
+      if (serial.trim() && serial !== originalSerialNumber) {
+        setIsCheckingSerial(true);
+      }
+    }, 500), // 500ms debounce to avoid excessive API calls
+    [originalSerialNumber]
+  );
+
   // Filter etats to exclude "Expiré" with case-insensitive matching
   const filteredEtats =
     etats?.filter((etat) => !etat.name.toLowerCase().includes("expir")) || [];
@@ -241,16 +271,33 @@ const EditActifModal = ({
   useEffect(() => {
     if (actif) {
       setSerialNumber(actif.serialNumber || "");
+      setOriginalSerialNumber(actif.serialNumber || "");
       setActifTypeId(actif.actifTypeId || "");
       setActifType(actif.actifType || "");
       setStatusId(actif.statusId || "");
       setEtatId(actif.etatId || "");
       setQuantity(actif.quantity || 1);
 
-      // Set relational IDs
+      // *** IMPROVED SUPPLIER INITIALIZATION ***
+      // Try to get fournisseurId from different possible sources
+      let supplierID = "";
+
+      if (actif.fournisseurId) {
+        // Direct ID is available
+        supplierID = actif.fournisseurId;
+      } else if (actif.fournisseurObj?.fournisseurId) {
+        // ID from fournisseurObj
+        supplierID = actif.fournisseurObj.fournisseurId;
+      } else if (actif.fournisseurs && actif.fournisseurs.length > 0) {
+        // ID from first item in fournisseurs array (single supplier case)
+        supplierID = actif.fournisseurs[0].fournisseurId;
+      }
+
+      setFournisseurId(supplierID);
+
+      // Set other relational IDs
       setMarqueId(actif.marqueId || "");
       setModeleId(actif.modeleId || "");
-      setFournisseurId(actif.fournisseurId || "");
 
       // Format warranty date
       if (actif.warrantyEnd) {
@@ -276,8 +323,33 @@ const EditActifModal = ({
           graphique: "",
         });
       }
+
+      // Reset serial check states
+      setSerialTouched(false);
+      setSerialExists(false);
+      setIsCheckingSerial(false);
     }
   }, [actif]);
+
+  // Check for serial number uniqueness when the serial number changes
+  useEffect(() => {
+    if (serialNumber.trim() && serialTouched) {
+      debouncedCheckSerialNumber(serialNumber);
+    } else {
+      setSerialExists(false);
+      setIsCheckingSerial(false);
+    }
+  }, [serialNumber, debouncedCheckSerialNumber, serialTouched]);
+
+  // Update serialExists state when the query completes
+  useEffect(() => {
+    if (isCheckingSerial && !isSerialCheckLoading) {
+      const isDuplicate =
+        !!existingActif && existingActif.actifId !== actif.actifId;
+      setSerialExists(isDuplicate);
+      setIsCheckingSerial(false);
+    }
+  }, [existingActif, isSerialCheckLoading, isCheckingSerial, actif]);
 
   // Handle actif type selection
   const handleActifTypeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
@@ -295,6 +367,19 @@ const EditActifModal = ({
     // Reset marque and modele when actifType changes
     setMarqueId("");
     setModeleId("");
+  };
+
+  // Handle serial number change with validation
+  const handleSerialNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSerialNumber(value);
+    setSerialTouched(true);
+
+    // Update form errors
+    setFormErrors((prev) => ({
+      ...prev,
+      serialNumber: !value.trim(),
+    }));
   };
 
   // Handle marque selection
@@ -317,7 +402,7 @@ const EditActifModal = ({
   // Validate form
   const validateForm = () => {
     const errors: Record<string, boolean> = {
-      serialNumber: !serialNumber,
+      serialNumber: !serialNumber || serialExists,
       actifTypeId: !actifTypeId,
       statusId: !statusId,
       etatId: !etatId,
@@ -375,6 +460,40 @@ const EditActifModal = ({
     onUpdate(formData);
   };
 
+  // Get supplier name by ID
+  const getSupplierName = (id: string): string => {
+    const supplier = fournisseurs.find((f) => f.fournisseurId === id);
+    return supplier ? supplier.name : "Non spécifié";
+  };
+
+  // Function to get current supplier name for display
+  const getCurrentSupplierName = (): string => {
+    if (actif.fournisseur) {
+      if (typeof actif.fournisseur === "string") {
+        return actif.fournisseur;
+      } else if (
+        typeof actif.fournisseur === "object" &&
+        "name" in (actif.fournisseur as any)
+      ) {
+        return (actif.fournisseur as any).name;
+      }
+    }
+
+    if (actif.fournisseurObj?.name) {
+      return actif.fournisseurObj.name;
+    }
+
+    if (
+      actif.fournisseurs &&
+      actif.fournisseurs.length > 0 &&
+      actif.fournisseurs[0].fournisseur?.name
+    ) {
+      return actif.fournisseurs[0].fournisseur.name;
+    }
+
+    return "Non spécifié";
+  };
+
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Modifier l'équipement</DialogTitle>
@@ -425,15 +544,28 @@ const EditActifModal = ({
             )}
           </FormControl>
 
-          {/* Serial Number */}
+          {/* Serial Number with uniqueness validation */}
           <TextField
             label="Numéro de série"
             value={serialNumber}
-            onChange={(e) => setSerialNumber(e.target.value)}
+            onChange={handleSerialNumberChange}
             fullWidth
             required
-            error={formErrors.serialNumber}
-            helperText={formErrors.serialNumber ? "Numéro de série requis" : ""}
+            error={formErrors.serialNumber || (serialTouched && serialExists)}
+            helperText={
+              formErrors.serialNumber && !serialExists
+                ? "Numéro de série requis"
+                : serialExists
+                ? "Ce numéro de série existe déjà"
+                : ""
+            }
+            InputProps={{
+              endAdornment: isCheckingSerial ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : serialTouched && serialNumber.trim() && !serialExists ? (
+                <span className="text-green-500">✓</span>
+              ) : null,
+            }}
           />
 
           {/* ActifType Selection */}
@@ -711,7 +843,12 @@ const EditActifModal = ({
         <Button onClick={onClose} color="inherit">
           Annuler
         </Button>
-        <Button onClick={handleUpdate} color="primary" variant="contained">
+        <Button
+          onClick={handleUpdate}
+          color="primary"
+          variant="contained"
+          disabled={isCheckingSerial} // Disable update button while checking serial
+        >
           Mettre à jour
         </Button>
       </DialogActions>

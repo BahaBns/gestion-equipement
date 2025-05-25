@@ -325,3 +325,74 @@ export const removeActifs = async (
     res.status(500).json({ message: "Error removing actifs" });
   }
 };
+
+
+/**
+ * Update/modify an existing employee
+ */
+export const modifyEmployee = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const prisma = getPrismaClient(req);
+    const { employeeId } = req.params;
+    const { nom, email } = req.body;
+
+    // Check if employee exists
+    const employee = await prisma.employee.findUnique({
+      where: { employeeId },
+    });
+
+    if (!employee) {
+      res.status(404).json({ message: "Employee not found" });
+      return;
+    }
+
+    // Update the employee
+    const updatedEmployee = await prisma.employee.update({
+      where: { employeeId },
+      data: {
+        ...(nom && { nom }),
+        ...(email && { email })
+      },
+      include: {
+        actifs: {
+          include: {
+            actif: true,
+          },
+        },
+        licenses: {
+          include: {
+            license: {
+              include: {
+                status: true,
+                licensetype: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Transform the data structure to match the getEmployees format
+    const transformedEmployee = {
+      ...updatedEmployee,
+      actifs: updatedEmployee.actifs.map((ea) => ({
+        ...ea.actif,
+        quantity: ea.quantity,
+        assignedAt: ea.assignedAt,
+      })),
+      licenses: updatedEmployee.licenses.map((el) => ({
+        ...el.license,
+        quantity: el.quantity,
+        assignedAt: el.assignedAt,
+      })),
+    };
+
+    res.status(200).json(transformedEmployee);
+  } catch (error) {
+    console.error("Error updating employee:", error);
+    res.status(500).json({ message: "Error updating employee", error });
+  }
+};

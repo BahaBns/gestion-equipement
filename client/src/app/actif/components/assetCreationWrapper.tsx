@@ -170,7 +170,7 @@ const AssetCreationWrapper = ({
         className="flex items-center bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded transition duration-150"
       >
         <Plus className="w-5 h-5 mr-2" />
-        Ajouter un equipement
+        Ajouter un équipement
       </Button>
 
       {/* Category Selection Dialog */}

@@ -12,6 +12,8 @@ interface StatusCount {
   actifs: number;
   licenses: number;
   total: number;
+  assigned: number;
+  available: number;
 }
 
 interface StatusData {
@@ -19,6 +21,8 @@ interface StatusData {
   value: number;
   actifs: number;
   licenses: number;
+  assigned: number;
+  available: number;
   percentage: string;
 }
 
@@ -29,7 +33,9 @@ interface StatusColorMap {
   "En maintenance": string;
   "Hors service": string;
   "En stock": string;
+  Disponible: string;
   Réservé: string;
+  Attribué: string;
   "En prêt": string;
   Expiré: string;
   Actif: string;
@@ -43,7 +49,9 @@ const statusColors: StatusColorMap = {
   "En maintenance": "#FFBB28", // Yellow for maintenance
   "Hors service": "#FF8042", // Orange for out of service
   "En stock": "#0088FE", // Blue for in stock
+  Disponible: "#0088FE", // Blue for available
   Réservé: "#8884D8", // Purple for reserved
+  Attribué: "#00C49F", // Green for assigned
   "En prêt": "#82CA9D", // Light green for borrowed
   Expiré: "#FF0000", // Red for expired licenses
   Actif: "#00C49F", // Green for active licenses
@@ -57,6 +65,22 @@ const CardStatusEquipmentSummary = () => {
   const { data: licenses, isLoading: licenseLoading } = useGetLicensesQuery();
   const { data: statuses } = useGetStatusesQuery();
 
+  // Function to calculate assigned quantity for an actif
+  const calculateAssignedQuantity = (actif: any): number => {
+    if (!actif.employees || actif.employees.length === 0) return 0;
+    return actif.employees.reduce(
+      (total: number, emp: any) => total + (emp.quantity || 0),
+      0
+    );
+  };
+
+  // Function to calculate available quantity for an actif
+  const calculateLibreQuantity = (actif: any): number => {
+    const totalQuantity = actif.quantity || 0;
+    const assignedQuantity = calculateAssignedQuantity(actif);
+    return Math.max(0, totalQuantity - assignedQuantity);
+  };
+
   // Calculate equipment by status
   const calculateEquipmentByStatus = (): StatusData[] => {
     if (!actifs || !licenses || !statuses) return [];
@@ -64,7 +88,7 @@ const CardStatusEquipmentSummary = () => {
     // Initialize an object to store counts by status
     const statusCounts: Record<string, StatusCount> = {};
 
-    // Group actifs by status and count
+    // Group actifs by status and count, considering assignments
     actifs.forEach((actif) => {
       const statusName = actif.status?.name || "Non défini";
       if (!statusCounts[statusName]) {
@@ -72,11 +96,20 @@ const CardStatusEquipmentSummary = () => {
           actifs: 0,
           licenses: 0,
           total: 0,
+          assigned: 0,
+          available: 0,
         };
       }
-      // Use Quantity field instead of incrementing by 1
-      statusCounts[statusName].actifs += actif.quantity;
-      statusCounts[statusName].total += actif.quantity;
+
+      // Calculate assigned and available quantities
+      const assignedQuantity = calculateAssignedQuantity(actif);
+      const availableQuantity = calculateLibreQuantity(actif);
+
+      // Update status counts
+      statusCounts[statusName].actifs += actif.quantity || 0;
+      statusCounts[statusName].total += actif.quantity || 0;
+      statusCounts[statusName].assigned += assignedQuantity;
+      statusCounts[statusName].available += availableQuantity;
     });
 
     // Group licenses by status and count
@@ -87,11 +120,27 @@ const CardStatusEquipmentSummary = () => {
           actifs: 0,
           licenses: 0,
           total: 0,
+          assigned: 0,
+          available: 0,
         };
       }
       // Use licenseQuantity field for licenses
       statusCounts[statusName].licenses += license.licenseQuantity;
       statusCounts[statusName].total += license.licenseQuantity;
+
+      // For licenses, we consider them all as "assigned" if they have employees
+      // or "available" if they don't
+      if (license.employees && license.employees.length > 0) {
+        const assignedLicenseQuantity = license.employees.reduce(
+          (sum: number, emp: any) => sum + (emp.quantity || 0),
+          0
+        );
+        statusCounts[statusName].assigned += assignedLicenseQuantity;
+        statusCounts[statusName].available +=
+          license.licenseQuantity - assignedLicenseQuantity;
+      } else {
+        statusCounts[statusName].available += license.licenseQuantity;
+      }
     });
 
     // Convert the object to array for Recharts
@@ -100,6 +149,9 @@ const CardStatusEquipmentSummary = () => {
       value: counts.total,
       actifs: counts.actifs,
       licenses: counts.licenses,
+      assigned: counts.assigned,
+      available: counts.available,
+      percentage: "0", // Will be calculated below
     }));
 
     // Sort by value (count) in descending order
@@ -110,15 +162,86 @@ const CardStatusEquipmentSummary = () => {
 
     // Calculate percentages for statuses
     return statusArray.map((status) => ({
-      name: status.name,
-      value: status.value,
-      actifs: status.actifs,
-      licenses: status.licenses,
+      ...status,
       percentage: ((Number(status.value) / totalCount) * 100).toFixed(1),
     }));
   };
 
+  // Calculate aggregate assigned vs available equipment
+  const calculateAssignmentSummary = () => {
+    if (!actifs || !licenses) return [];
+
+    // Initialize counters
+    let totalAssigned = 0;
+    let totalAvailable = 0;
+    let totalCount = 0;
+
+    // Count assigned and available actifs
+    actifs.forEach((actif) => {
+      const assignedQty = calculateAssignedQuantity(actif);
+      const availableQty = calculateLibreQuantity(actif);
+
+      totalAssigned += assignedQty;
+      totalAvailable += availableQty;
+      totalCount += actif.quantity || 0;
+    });
+
+    // Count assigned and available licenses
+    licenses.forEach((license) => {
+      if (license.employees && license.employees.length > 0) {
+        const assignedLicenseQty = license.employees.reduce(
+          (sum: number, emp: any) => sum + (emp.quantity || 0),
+          0
+        );
+        totalAssigned += assignedLicenseQty;
+        totalAvailable += license.licenseQuantity - assignedLicenseQty;
+      } else {
+        totalAvailable += license.licenseQuantity;
+      }
+      totalCount += license.licenseQuantity;
+    });
+
+    // Create summary data
+    return [
+      {
+        name: "Assigné",
+        value: totalAssigned,
+        actifs: actifs
+          ? actifs.filter((a) => calculateAssignedQuantity(a) > 0).length
+          : 0,
+        licenses: licenses
+          ? licenses.filter((l) => l.employees && l.employees.length > 0).length
+          : 0,
+        percentage: ((totalAssigned / totalCount) * 100).toFixed(1),
+        display: `${totalAssigned} équipement${
+          totalAssigned > 1 ? "s" : ""
+        } assigné${totalAssigned > 1 ? "s" : ""}`,
+      },
+      {
+        name: "Disponible",
+        value: totalAvailable,
+        actifs: actifs
+          ? actifs.filter((a) => calculateLibreQuantity(a) > 0).length
+          : 0,
+        licenses: licenses
+          ? licenses.filter(
+              (l) =>
+                !l.employees ||
+                l.employees.length === 0 ||
+                l.licenseQuantity >
+                  l.employees.reduce((sum, emp) => sum + (emp.quantity || 0), 0)
+            ).length
+          : 0,
+        percentage: ((totalAvailable / totalCount) * 100).toFixed(1),
+        display: `${totalAvailable} équipement${
+          totalAvailable > 1 ? "s" : ""
+        } non assigné${totalAvailable > 1 ? "s" : ""}`,
+      },
+    ];
+  };
+
   const equipmentStatuses = calculateEquipmentByStatus();
+  const assignmentSummary = calculateAssignmentSummary();
 
   // Calculate total equipment count
   const totalActifs = actifs
@@ -152,6 +275,8 @@ const CardStatusEquipmentSummary = () => {
     return "#A0A0A0";
   };
 
+
+
   return (
     <div className="row-span-3 bg-white shadow-md rounded-2xl flex flex-col justify-between">
       {actifLoading || licenseLoading ? (
@@ -167,12 +292,12 @@ const CardStatusEquipmentSummary = () => {
           </div>
           {/* BODY */}
           <div className="xl:flex justify-between pr-7">
-            {/* CHART */}
+            {/* CHART - Assignment distribution */}
             <div className="relative basis-3/5">
               <ResponsiveContainer width="100%" height={140}>
                 <PieChart>
                   <Pie
-                    data={equipmentStatuses}
+                    data={assignmentSummary}
                     innerRadius={50}
                     outerRadius={60}
                     fill="#3182ce"
@@ -181,12 +306,10 @@ const CardStatusEquipmentSummary = () => {
                     cx="50%"
                     cy="50%"
                   >
-                    {equipmentStatuses.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={getStatusColor(entry.name)}
-                      />
-                    ))}
+                    <Cell key="assigned" fill="#00C49F" />{" "}
+                    {/* Green for assigned */}
+                    <Cell key="available" fill="#0088FE" />{" "}
+                    {/* Blue for available */}
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
@@ -196,21 +319,24 @@ const CardStatusEquipmentSummary = () => {
             </div>
             {/* LABELS */}
             <ul className="flex flex-col justify-around items-center xl:items-start py-5 gap-3">
-              {equipmentStatuses.map((entry, index) => (
+              {/* Assignment summary */}
+              {assignmentSummary.map((entry, index) => (
                 <li
-                  key={`legend-${index}`}
-                  className="flex items-center text-xs"
+                  key={`assignment-${index}`}
+                  className="flex items-center text-xs font-medium"
                 >
                   <span
                     className="mr-2 w-3 h-3 rounded-full"
-                    style={{ backgroundColor: getStatusColor(entry.name) }}
+                    style={{
+                      backgroundColor:
+                        entry.name === "Assigné" ? "#00C49F" : "#0088FE",
+                    }}
                   ></span>
-                  {entry.name}: {entry.percentage}% ({entry.value})
-                  <span className="ml-1 text-gray-500">
-                    (Équip: {entry.actifs}, Lic: {entry.licenses})
-                  </span>
+                  {entry.name}: {entry.percentage}% ({entry.display})
                 </li>
               ))}
+              {/* Status breakdown */}
+
             </ul>
           </div>
           {/* FOOTER */}

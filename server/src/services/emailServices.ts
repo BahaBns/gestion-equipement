@@ -94,8 +94,8 @@ export const sendAssignmentNotification = async (
       .map(
         (actif) => `
       <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;">${actif.actifType} </td>
         <td style="padding: 8px; border: 1px solid #ddd;">${actif.marqueName} ${actif.modeleName}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${actif.serialNumber}</td>
       </tr>
     `
       )
@@ -258,6 +258,7 @@ export const sendLicenseAssignmentNotification = async (
  * @param dbName The database to use ('lagom' or 'insight')
  * @returns Promise<boolean> Success status
  */
+
 export const sendAcceptanceConfirmation = async (
   employee: Employee,
   actifs: Actif[],
@@ -293,8 +294,8 @@ export const sendAcceptanceConfirmation = async (
       .map(
         (actif) => `
       <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;">${actif.actifType}</td>
         <td style="padding: 8px; border: 1px solid #ddd;">${actif.marqueName} ${actif.modeleName}</td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${actif.serialNumber}</td>
       </tr>
     `
       )

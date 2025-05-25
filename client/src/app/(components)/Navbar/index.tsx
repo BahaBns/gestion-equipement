@@ -5,7 +5,7 @@ import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
 import { Bell, Menu, Moon, Settings, Sun, LogOut } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSelectedDatabase } from "@/utils/auth";
+import { getSelectedDatabase, logout } from "@/utils/auth";
 
 const Navbar = () => {
   const [databaseName, setDatabaseName] = useState<string>("");
@@ -44,16 +44,32 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("selectedDatabase"); // Also remove the database selection
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    // Use the proper logout utility to cleanly remove auth state
+    logout();
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/logout`, {
-      method: "POST",
-      credentials: "include",
-    }).catch((err) => console.error("Logout error:", err));
+    // Call the API endpoint to handle server-side logout
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/clear-session`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
 
-    window.location.href = "/login";
+    // Add a small delay to ensure cookies are cleared before redirecting
+    setTimeout(() => {
+      // Use router for client-side navigation when possible
+      if (router) {
+        router.push("/login");
+      } else {
+        // Fallback to direct navigation
+        window.location.href = "/login";
+      }
+    }, 100);
   };
 
   // Function to get display name

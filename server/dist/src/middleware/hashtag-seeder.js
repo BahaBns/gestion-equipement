@@ -16,7 +16,9 @@ exports.seedAndTagAll = seedAndTagAll;
 // hashtag-seeder.ts
 const client_1 = require("@prisma/client");
 const uuid_1 = require("uuid");
-const prisma = new client_1.PrismaClient();
+const prisma = new client_1.PrismaClient({
+    datasources: { db: { url: process.env.LAGOM_DATABASE_URL } },
+});
 /**
  * Normalizes a string to be used as a hashtag
  * - Converts to lowercase
