@@ -44,8 +44,8 @@ import {
   getIconForSubcategory,
   getIconColorForCategory,
 } from "../../(components)/utils/iconUtils";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { fr } from "date-fns/locale/fr";
 import {
   Actif,
   EmployeeActif,
