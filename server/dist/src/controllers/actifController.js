@@ -67,7 +67,7 @@ const generateEmployeeId = (req) => __awaiter(void 0, void 0, void 0, function* 
     return `EM00${nextNumber.toString().padStart(4, "0")}`;
 });
 /**
- * Get all Actifs or search by name
+ * Get all Actifs or search by name - UPDATED VERSION
  */
 const getActifs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -127,14 +127,13 @@ const getActifs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 employees: {
                     include: {
                         employee: true,
+                        status: true, // Include assignment-level status
                     },
                 },
             },
         });
         // Transform the data to make it easier to work with in the frontend
-        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { marqueObj: actif.marque, modeleObj: actif.modele, employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity }))), 
-            // Transform supplier data for easier frontend consumption
-            suppliers: actif.fournisseurs.map((af) => ({
+        const transformedActifs = actifs.map((actif) => (Object.assign(Object.assign({}, actif), { marqueObj: actif.marque, modeleObj: actif.modele, employees: actif.employees.map((ea) => (Object.assign(Object.assign({}, ea.employee), { quantity: ea.quantity, assignedAt: ea.assignedAt, assignmentStatus: ea.status, assignmentStatusId: ea.statusId }))), suppliers: actif.fournisseurs.map((af) => ({
                 fournisseurId: af.fournisseur.fournisseurId,
                 name: af.fournisseur.name,
                 email: af.fournisseur.email,
@@ -154,7 +153,7 @@ exports.getActifs = getActifs;
  * Create a new Actif with support for multiple suppliers
  */
 const createActif = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     try {
         const prisma = getPrismaClient(req);
         console.log("Using database:", ((_a = req.user) === null || _a === void 0 ? void 0 : _a.selectedDatabase) || "undefined");
@@ -407,7 +406,7 @@ const createActif = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             }
             return createdActif;
         }));
-        // Handle employee assignment
+        // Handle employee assignment -----------------------------
         let employeeToAssign = employeeId;
         // If we need to create a new employee
         if (createNewEmployee === "true" && newEmployeeName && newEmployeeEmail) {
@@ -437,6 +436,8 @@ const createActif = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         // If we have an employee to assign
         if (employeeToAssign) {
+            // Extract the selected database for token creation
+            const selectedDatabase = ((_b = req.user) === null || _b === void 0 ? void 0 : _b.selectedDatabase) || "insight";
             // Verify the employee exists
             const employee = yield prisma.employee.findUnique({
                 where: { employeeId: employeeToAssign },
@@ -445,15 +446,49 @@ const createActif = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 res.status(400).json({ message: "Invalid employeeId" });
                 return;
             }
-            // Create the relationship between employee and actif with the specified quantity
+            // Find the "Réservé" status for assignments
+            const reservedStatus = yield prisma.status.findFirst({
+                where: { name: "Réservé" },
+            });
+            if (!reservedStatus) {
+                res.status(400).json({ message: 'Status "Réservé" not found' });
+                return;
+            }
+            // Create the relationship between employee and actif with "Réservé" status
             yield prisma.employeeActif.create({
                 data: {
                     employeeId: employeeToAssign,
                     actifId: newActif.actifId,
                     assignedAt: new Date(),
                     quantity: parsedAssignQuantity,
+                    statusId: reservedStatus.statusId, // Set assignment-level status to "Réservé"
                 },
             });
+            // Generate token for email acceptance
+            const quantities = { [newActif.actifId]: parsedAssignQuantity };
+            const token = (0, tokenService_1.generateAssignmentToken)(employeeToAssign, [newActif.actifId], quantities, selectedDatabase);
+            // Calculate expiry date (7 days from now)
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 7);
+            console.log(`Storing assignment token with database: ${selectedDatabase}`);
+            // Store the token in database
+            yield (0, tokenService_1.storeAssignmentToken)(token, employeeToAssign, [newActif.actifId], expiryDate, "actif", selectedDatabase);
+            // Send email notification to employee
+            console.log("Sending email notification to employee for new actif assignment");
+            try {
+                const emailSent = yield (0, emailServices_1.sendAssignmentNotification)(employee, [newActif], // Pass the created actif
+                token, selectedDatabase);
+                if (!emailSent) {
+                    console.warn("Failed to send assignment notification email");
+                }
+                else {
+                    console.log(`Assignment notification email sent successfully to ${employee.email}`);
+                }
+            }
+            catch (emailError) {
+                console.error("Error sending assignment notification:", emailError);
+                // Don't fail the actif creation if email fails
+            }
         }
         // Fetch the complete actif with relations
         const completeActif = yield prisma.actif.findUnique({
@@ -949,7 +984,7 @@ const deleteActif = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.deleteActif = deleteActif;
 /**
- * Assign actifs to an employee with quantities
+ * Assign actifs to an employee with quantities - UPDATED VERSION
  */
 const assignActifsToEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
@@ -976,6 +1011,14 @@ const assignActifsToEmployee = (req, res) => __awaiter(void 0, void 0, void 0, f
         });
         if (!employee) {
             res.status(404).json({ message: "Employee not found" });
+            return;
+        }
+        // Find the "Réservé" status for assignments
+        const reservedStatus = yield prisma.status.findFirst({
+            where: { name: "Réservé" },
+        });
+        if (!reservedStatus) {
+            res.status(400).json({ message: 'Status "Réservé" not found' });
             return;
         }
         // Execute in transaction for data consistency
@@ -1007,7 +1050,7 @@ const assignActifsToEmployee = (req, res) => __awaiter(void 0, void 0, void 0, f
                 });
                 if (existingRelation) {
                     console.log(`Updating existing relation for actif: ${actifId}`);
-                    // Update the existing relationship with new quantity
+                    // Update the existing relationship with new quantity and status
                     yield prismaClient.employeeActif.update({
                         where: {
                             employeeId_actifId: {
@@ -1018,35 +1061,26 @@ const assignActifsToEmployee = (req, res) => __awaiter(void 0, void 0, void 0, f
                         data: {
                             quantity: existingRelation.quantity + quantity,
                             assignedAt: new Date(), // Update the assignment date
+                            statusId: reservedStatus.statusId, // Set assignment-level status
                         },
                     });
                 }
                 else {
                     console.log(`Creating new relation for actif: ${actifId}`);
-                    // Create a new relationship
+                    // Create a new relationship with assignment-level status
                     yield prismaClient.employeeActif.create({
                         data: {
                             employeeId,
                             actifId,
                             quantity,
                             assignedAt: new Date(),
+                            statusId: reservedStatus.statusId, // Set assignment-level status
                         },
                     });
                 }
-                // Update the status of the actif to "Réservé"
-                const reservedStatus = yield prismaClient.status.findFirst({
-                    where: { name: "Réservé" },
-                });
-                if (reservedStatus) {
-                    console.log(`Updating actif status to "Réservé" (${reservedStatus.statusId})`);
-                    yield prismaClient.actif.update({
-                        where: { actifId },
-                        data: { statusId: reservedStatus.statusId },
-                    });
-                }
-                else {
-                    console.warn('Status "Réservé" not found in the database');
-                }
+                // DON'T UPDATE GLOBAL ACTIF STATUS - This was the problem!
+                // The global actif status should only be updated for actif-level changes
+                // like "En panne", "En maintenance", etc.
                 // Add to assignments for the result
                 assignments.push(actifId);
             }
@@ -1082,6 +1116,7 @@ const assignActifsToEmployee = (req, res) => __awaiter(void 0, void 0, void 0, f
                                 specification: true,
                             },
                         },
+                        status: true, // Include assignment-level status
                     },
                 },
             },
@@ -1116,7 +1151,7 @@ const assignActifsToEmployee = (req, res) => __awaiter(void 0, void 0, void 0, f
 });
 exports.assignActifsToEmployee = assignActifsToEmployee;
 /**
- * Remove actifs from an employee
+ * Remove actifs from an employee - UPDATED VERSION
  */
 const removeActifsFromEmployee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -1158,16 +1193,14 @@ const removeActifsFromEmployee = (req, res) => __awaiter(void 0, void 0, void 0,
                             actifId,
                         },
                     },
+                    include: {
+                        status: true, // Include assignment-level status
+                    },
                 });
                 if (!existingRelation) {
                     continue; // Skip if relationship doesn't exist
                 }
-                // Get actif to check its status
-                const actif = yield prismaClient.actif.findUnique({
-                    where: { actifId },
-                    include: { status: true },
-                });
-                const isReserved = ((_a = actif === null || actif === void 0 ? void 0 : actif.status) === null || _a === void 0 ? void 0 : _a.name) === "Réservé";
+                const isReserved = ((_a = existingRelation.status) === null || _a === void 0 ? void 0 : _a.name) === "Réservé";
                 if (quantityToRemove === null ||
                     quantityToRemove >= existingRelation.quantity) {
                     // Remove the entire relationship
@@ -1179,34 +1212,7 @@ const removeActifsFromEmployee = (req, res) => __awaiter(void 0, void 0, void 0,
                             },
                         },
                     });
-                    // Check if this actif is no longer assigned to any employee
-                    const otherAssignments = yield prismaClient.employeeActif.findFirst({
-                        where: { actifId },
-                    });
-                    if (!otherAssignments) {
-                        // Find a "Disponible" status or similar
-                        const availableStatus = yield prismaClient.status.findFirst({
-                            where: { name: "Disponible" },
-                        });
-                        if (availableStatus) {
-                            // Update the actif status to "Disponible"
-                            yield prismaClient.actif.update({
-                                where: { actifId },
-                                data: { statusId: availableStatus.statusId },
-                            });
-                        }
-                        // Also update etat if appropriate
-                        const stockEtat = yield prismaClient.etat.findFirst({
-                            where: { name: "En stock" },
-                        });
-                        if (stockEtat) {
-                            yield prismaClient.actif.update({
-                                where: { actifId },
-                                data: { etatId: stockEtat.etatId },
-                            });
-                        }
-                    }
-                    // If this was a reserved actif, cancel the assignment token
+                    // If this was a reserved assignment, cancel the assignment token
                     if (isReserved) {
                         // Find assignment tokens for this actif
                         const pendingTokens = yield prismaClient.assignmentToken.findMany({
@@ -1240,7 +1246,7 @@ const removeActifsFromEmployee = (req, res) => __awaiter(void 0, void 0, void 0,
                     }
                 }
                 else {
-                    // Update the quantity in the relationship
+                    // Update the quantity in the relationship (keep the same status)
                     yield prismaClient.employeeActif.update({
                         where: {
                             employeeId_actifId: {
@@ -1285,6 +1291,7 @@ const removeActifsFromEmployee = (req, res) => __awaiter(void 0, void 0, void 0,
                                 specification: true,
                             },
                         },
+                        status: true, // Include assignment-level status
                     },
                 },
             },
@@ -1305,7 +1312,7 @@ const removeActifsFromEmployee = (req, res) => __awaiter(void 0, void 0, void 0,
 });
 exports.removeActifsFromEmployee = removeActifsFromEmployee;
 /**
- * Get all assignments with quantities
+ * Get all assignments with quantities - UPDATED VERSION
  */
 const getActifAssignments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -1326,6 +1333,7 @@ const getActifAssignments = (req, res) => __awaiter(void 0, void 0, void 0, func
                         attachments: true,
                     },
                 },
+                status: true, // Include assignment-level status
             },
         });
         res.json(assignments);

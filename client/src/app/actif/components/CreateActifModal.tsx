@@ -140,8 +140,6 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
   const [newEmployeeName, setNewEmployeeName] = useState("");
   const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
   const [assignQuantity, setAssignQuantity] = useState(1);
-  const [autoReserveStatus, setAutoReserveStatus] = useState(true);
-  const [autoUpdateEtat, setAutoUpdateEtat] = useState(true);
 
   // States for tracking required field validation
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -403,7 +401,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     return !Object.values(errors).some((error) => error);
   };
 
-  // Fonction pour passer à l&apos;étape suivante
+  // Fonction pour passer à l'étape suivante
   const handleNext = () => {
     if (activeStep === 0 && !validateStep1()) {
       return;
@@ -411,7 +409,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  // Fonction pour revenir à l&apos;étape précédente
+  // Fonction pour revenir à l'étape précédente
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -455,8 +453,6 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
     setNewEmployeeName("");
     setNewEmployeeEmail("");
     setAssignQuantity(1);
-    setAutoReserveStatus(true);
-    setAutoUpdateEtat(true);
 
     // Reset step
     setActiveStep(0);
@@ -531,33 +527,12 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
       formData.append("fournisseurId", fournisseurId);
     }
 
-    // Handle status based on assignment
-    if (assignToEmployee && autoReserveStatus) {
-      // Find "Réservé" status ID
-      const reservedStatus = statuses?.find(
-        (status) => status.name === "Réservé"
-      );
-      if (reservedStatus) {
-        formData.append("statusId", reservedStatus.statusId);
-      } else {
-        formData.append("statusId", statusId);
-      }
-    } else {
-      formData.append("statusId", statusId);
-    }
+    // UPDATED: Always use the user-selected status - don't override for assignments
+    // The assignment-level status will be handled separately in the backend
+    formData.append("statusId", statusId);
 
-    // Handle etat based on assignment
-    if (assignToEmployee && autoUpdateEtat) {
-      // Find "En service" etat ID
-      const enServiceEtat = etats?.find((etat) => etat.name === "En service");
-      if (enServiceEtat) {
-        formData.append("etatId", enServiceEtat.etatId);
-      } else {
-        formData.append("etatId", etatId);
-      }
-    } else {
-      formData.append("etatId", JSON.stringify([etatId]));
-    }
+    // Use selected etat
+    formData.append("etatId", etatId);
 
     formData.append("quantity", quantity.toString());
 
@@ -636,15 +611,14 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
             {!skipCategorySelection && (
               <FormControl
                 fullWidth
-                required
                 error={formErrors.categoryId}
-                className="col-span-2"
+                className="col-span-2 required-label"
               >
-                <InputLabel>Catégorie</InputLabel>
+                <InputLabel>Catégorie <span style={{color: '#ef4444'}}>*</span></InputLabel>
                 <Select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  label="Catégorie"
+                  label="Catégorie *"
                 >
                   <MenuItem value="">
                     <em>Sélectionner une catégorie</em>
@@ -664,81 +638,13 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               </FormControl>
             )}
 
-            {/* Status Selection */}
-            <FormControl fullWidth required error={formErrors.statusId}>
-              <InputLabel>Statut</InputLabel>
-              <Select
-                value={statusId}
-                onChange={(e) => setStatusId(e.target.value)}
-                label="Statut"
-              >
-                <MenuItem value="">
-                  <em>Sélectionner un statut</em>
-                </MenuItem>
-                {filteredStatus?.map((status) => (
-                  <MenuItem key={status.statusId} value={status.statusId}>
-                    {status.name}
-                  </MenuItem>
-                ))}
-              </Select>
-              {formErrors.statusId && (
-                <FormHelperText>Statut requis</FormHelperText>
-              )}
-            </FormControl>
-
-            {/* Etat Selection */}
-            <FormControl fullWidth required error={formErrors.etatId}>
-              <InputLabel>État</InputLabel>
-              <Select
-                value={etatId}
-                onChange={(e) => setEtatId(e.target.value)}
-                label="État"
-              >
-                <MenuItem value="">
-                  <em>Sélectionner un état</em>
-                </MenuItem>
-                {filteredEtats?.map((etat) => (
-                  <MenuItem key={etat.etatId} value={etat.etatId}>
-                    {etat.name}
-                  </MenuItem>
-                ))}
-              </Select>
-              {formErrors.etatId && (
-                <FormHelperText>État requis</FormHelperText>
-              )}
-            </FormControl>
-
-            {/* Serial Number with uniqueness validation */}
-            <TextField
-              label="Numéro de série"
-              value={serialNumber}
-              onChange={handleSerialNumberChange}
-              required
-              error={formErrors.serialNumber || (serialTouched && serialExists)}
-              helperText={
-                formErrors.serialNumber && !serialExists
-                  ? "Numéro de série requis"
-                  : serialExists
-                  ? "Ce numéro de série existe déjà"
-                  : ""
-              }
-              fullWidth
-              InputProps={{
-                endAdornment: isCheckingSerial ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : serialTouched && serialNumber.trim() && !serialExists ? (
-                  <span className="text-green-500">✓</span>
-                ) : null,
-              }}
-            />
-
             {/* ActifType Selection with loading indicator */}
-            <FormControl fullWidth required error={formErrors.actifTypeId}>
-              <InputLabel>Type d&apos;équipement</InputLabel>
+            <FormControl fullWidth error={formErrors.actifTypeId} className="required-label">
+              <InputLabel>Type d'équipement <span style={{color: '#ef4444'}}>*</span></InputLabel>
               <Select
                 value={actifTypeId}
                 onChange={handleActifTypeChange}
-                label="Type d'équipement"
+                label="Type d'équipement *"
                 disabled={
                   !categoryId || (!availableActifTypes && isLoadingActifTypes)
                 }
@@ -758,22 +664,22 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
                 ))}
               </Select>
               {formErrors.actifTypeId && (
-                <FormHelperText>Type d&apos;équipement requis</FormHelperText>
+                <FormHelperText>Type d'équipement requis</FormHelperText>
               )}
               {!categoryId && !skipCategorySelection && (
                 <FormHelperText>
-                  Veuillez d&apos;abord sélectionner une catégorie
+                  Veuillez d'abord sélectionner une catégorie
                 </FormHelperText>
               )}
             </FormControl>
 
             {/* Brand (Marque) */}
-            <FormControl fullWidth required error={formErrors.marqueId}>
-              <InputLabel>Marque</InputLabel>
+            <FormControl fullWidth error={formErrors.marqueId} className="required-label">
+              <InputLabel>Marque <span style={{color: '#ef4444'}}>*</span></InputLabel>
               <Select
                 value={marqueId}
                 onChange={handleMarqueChange}
-                label="Marque"
+                label="Marque *"
                 disabled={!actifTypeId || isLoadingMarques}
                 startAdornment={
                   isLoadingMarques ? <CircularProgress size={20} /> : null
@@ -793,18 +699,18 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               )}
               {!actifTypeId && (
                 <FormHelperText>
-                  Veuillez d&apos;abord sélectionner un type d&apos;équipement
+                  Veuillez d'abord sélectionner un type d'équipement
                 </FormHelperText>
               )}
             </FormControl>
 
             {/* Model (Modele) */}
-            <FormControl fullWidth required error={formErrors.modeleId}>
-              <InputLabel>Modèle</InputLabel>
+            <FormControl fullWidth error={formErrors.modeleId} className="required-label">
+              <InputLabel>Modèle <span style={{color: '#ef4444'}}>*</span></InputLabel>
               <Select
                 value={modeleId}
                 onChange={(e) => setModeleId(e.target.value)}
-                label="Modèle"
+                label="Modèle *"
                 disabled={!marqueId || isLoadingModeles}
                 startAdornment={
                   isLoadingModeles ? <CircularProgress size={20} /> : null
@@ -824,10 +730,81 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               )}
               {!marqueId && (
                 <FormHelperText>
-                  Veuillez d&apos;abord sélectionner une marque
+                  Veuillez d'abord sélectionner une marque
                 </FormHelperText>
               )}
             </FormControl>
+
+            {/* Status Selection */}
+            <FormControl fullWidth error={formErrors.statusId} className="required-label">
+              <InputLabel>Statut <span style={{color: '#ef4444'}}>*</span></InputLabel>
+              <Select
+                value={statusId}
+                onChange={(e) => setStatusId(e.target.value)}
+                label="Statut *"
+              >
+                <MenuItem value="">
+                  <em>Sélectionner un statut</em>
+                </MenuItem>
+                {filteredStatus?.map((status) => (
+                  <MenuItem key={status.statusId} value={status.statusId}>
+                    {status.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formErrors.statusId && (
+                <FormHelperText>Statut requis</FormHelperText>
+              )}
+            </FormControl>
+
+            {/* Etat Selection */}
+            <FormControl fullWidth error={formErrors.etatId} className="required-label">
+              <InputLabel>État <span style={{color: '#ef4444'}}>*</span></InputLabel>
+              <Select
+                value={etatId}
+                onChange={(e) => setEtatId(e.target.value)}
+                label="État *"
+              >
+                <MenuItem value="">
+                  <em>Sélectionner un état</em>
+                </MenuItem>
+                {filteredEtats?.map((etat) => (
+                  <MenuItem key={etat.etatId} value={etat.etatId}>
+                    {etat.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formErrors.etatId && (
+                <FormHelperText>État requis</FormHelperText>
+              )}
+            </FormControl>
+
+            {/* Serial Number with uniqueness validation */}
+            <TextField
+              label={
+                <>
+                  Numéro de série <span style={{color: '#ef4444'}}>*</span>
+                </>
+              }
+              value={serialNumber}
+              onChange={handleSerialNumberChange}
+              error={formErrors.serialNumber || (serialTouched && serialExists)}
+              helperText={
+                formErrors.serialNumber && !serialExists
+                  ? "Numéro de série requis"
+                  : serialExists
+                  ? "Ce numéro de série existe déjà"
+                  : ""
+              }
+              fullWidth
+              InputProps={{
+                endAdornment: isCheckingSerial ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : serialTouched && serialNumber.trim() && !serialExists ? (
+                  <span className="text-green-500">✓</span>
+                ) : null,
+              }}
+            />
 
             {/* Quantity */}
             <TextField
@@ -856,15 +833,16 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
             {/* Warranty End Date - Now required */}
             <TextField
               label={
-                isSoftwareCategory
-                  ? "Date d&apos;expiration"
-                  : "Fin de garantie"
+                <>
+                  {isSoftwareCategory
+                    ? "Date d'expiration"
+                    : "Fin de garantie"} <span style={{color: '#ef4444'}}>*</span>
+                </>
               }
               type="date"
               value={warrantyEnd}
               onChange={handleWarrantyEndChange}
               fullWidth
-              required
               error={formErrors.warrantyEnd}
               helperText={
                 formErrors.warrantyEnd
@@ -884,7 +862,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
             {/* Toggle for single/multiple supplier mode */}
             <div className="col-span-2 flex items-center justify-between mb-4">
               <Typography variant="subtitle1">
-                Mode d&apos;approvisionnement
+                Mode d'approvisionnement
               </Typography>
               <FormControlLabel
                 control={
@@ -906,15 +884,14 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
             {!useMultipleSuppliers && (
               <FormControl
                 fullWidth
-                required
                 error={formErrors.fournisseurId}
-                className="col-span-2"
+                className="col-span-2 required-label"
               >
-                <InputLabel>Fournisseur</InputLabel>
+                <InputLabel>Fournisseur <span style={{color: '#ef4444'}}>*</span></InputLabel>
                 <Select
                   value={fournisseurId}
                   onChange={handleFournisseurChange}
-                  label="Fournisseur"
+                  label="Fournisseur *"
                   disabled={isLoadingFournisseurs}
                   startAdornment={
                     isLoadingFournisseurs ? (
@@ -1002,7 +979,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
           </div>
         )}
 
-        {/* Étape 3: Assignation d&apos;employé */}
+        {/* Étape 3: Assignation d'employé */}
         {activeStep === 2 && (
           <div className="mt-4">
             <div className="mb-4">
@@ -1021,26 +998,6 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
 
             {assignToEmployee && (
               <div className="ml-6">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={autoReserveStatus}
-                      onChange={(e) => setAutoReserveStatus(e.target.checked)}
-                    />
-                  }
-                  label="Changer le statut à 'Réservé'"
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={autoUpdateEtat}
-                      onChange={(e) => setAutoUpdateEtat(e.target.checked)}
-                    />
-                  }
-                  label="Changer l'état à 'En service'"
-                />
-
                 <div className="mb-4 mt-4">
                   <div className="flex mb-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1 mr-2">
@@ -1130,7 +1087,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
               </div>
             )}
 
-            {/* Résumé de l&apos;actif */}
+            {/* Résumé de l'actif */}
             <div className="mt-6 p-4 border border-gray-300 rounded bg-gray-50">
               <h3 className="font-medium mb-2">Résumé</h3>
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -1138,17 +1095,7 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
                   <strong>Nom:</strong>{" "}
                   {skipNomField ? generateActifName() : "Personnalisé"}
                 </div>
-                <div>
-                  <strong>Type:</strong> {actifType}
-                </div>
-                <div>
-                  <strong>Marque:</strong>{" "}
-                  {marques.find((m) => m.marqueId === marqueId)?.name || ""}
-                </div>
-                <div>
-                  <strong>Modèle:</strong>{" "}
-                  {modeles.find((m) => m.modeleId === modeleId)?.name || ""}
-                </div>
+                
                 <div>
                   <strong>N° Série:</strong> {serialNumber}
                 </div>
@@ -1175,25 +1122,30 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
                       ?.name || ""
                   )}
                 </div>
-                <div>
-                  <strong>Statut:</strong>{" "}
-                  {assignToEmployee && autoReserveStatus
-                    ? "Réservé (automatique)"
-                    : statuses?.find((status) => status.statusId === statusId)
-                        ?.name || ""}
+                
+                {/* UPDATED: Show both global status and assignment status */}
+                <div className="col-span-2">
+                  <div>
+                    <strong>Statut:</strong>{" "}
+                    {statuses?.find((status) => status.statusId === statusId)?.name || ""}
+                  </div>
+                  {assignToEmployee && (
+                    <div className="text-sm text-gray-600 mt-1">
+                      <strong>Statut d'assignation:</strong> Réservé (en attente d'acceptation)
+                    </div>
+                  )}
                 </div>
+                
                 <div>
                   <strong>État:</strong>{" "}
-                  {assignToEmployee && autoUpdateEtat
-                    ? "En service (automatique)"
-                    : etats?.find((etat) => etat.etatId === etatId)?.name || ""}
+                  {etats?.find((etat) => etat.etatId === etatId)?.name || ""}
                 </div>
                 {warrantyEnd && (
                   <div>
                     <strong>
                       {isSoftwareCategory
                         ? "Expiration:"
-                        : "Garantie jusqu&apos;au:"}
+                        : "Garantie jusqu'au:"}
                     </strong>{" "}
                     {new Date(warrantyEnd).toLocaleDateString()}
                   </div>
@@ -1275,4 +1227,3 @@ const CreateActifModal: React.FC<CreateActifModalProps> = ({
 };
 
 export default CreateActifModal;
-

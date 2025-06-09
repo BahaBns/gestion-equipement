@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isTokenUsed = exports.updateTokenStatus = exports.storeAssignmentToken = exports.verifyAssignmentToken = exports.generateLicenseAssignmentToken = exports.generateAssignmentToken = void 0;
-// services/tokenService.ts
+// services/tokenService.ts - UPDATED INTERFACE
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const client_1 = require("@prisma/client");
 const crypto_1 = __importDefault(require("crypto"));

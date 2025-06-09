@@ -19,7 +19,7 @@ async function seedAuthDatabase() {
     const user = await prisma.user.create({
       data: {
         id: "1", // Adding an ID (modify as needed)
-        email: "admin@example.com",
+        email: "bah4.bns@gmail.com",
         password:
           "$2a$10$r0qjaDXvPi5e8baza.FT3uNOFHUo4WSbcyYszsszrDLHHuALcP5PC", // Pre-hashed password
         name: "admin user",

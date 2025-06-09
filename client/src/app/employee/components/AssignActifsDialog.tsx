@@ -88,6 +88,20 @@ const AssignActifsDialog = ({
   const marqueMap = new Map(marques?.map((m) => [m.marqueId, m.name]) || []);
   const modeleMap = new Map(modeles?.map((m) => [m.modeleId, m.name]) || []);
 
+  
+  // Reset dialog state when opening
+  useEffect(() => {
+    if (open) {
+      // Reset all local state when dialog opens
+      setSearchTerm("");
+      setAssignmentResult(null);
+      setIsAssigning(false);
+      setSelectedActifs([]);
+      setActifQuantities({});
+    }
+  }, [open, setSelectedActifs]);
+
+
   // Find the "Réservé" status ID when the component loads
   useEffect(() => {
     if (statuses) {

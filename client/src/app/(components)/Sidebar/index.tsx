@@ -235,15 +235,6 @@ const Sidebar = () => {
         />
       </div>
 
-      {/* Token status indicator (helpful for debugging) */}
-      {process.env.NODE_ENV !== "production" && (
-        <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-2 px-4`}>
-          <p className="text-xs text-gray-500">
-            Token: {tokenValid ? "✓ Valid" : "✗ Invalid"}
-          </p>
-        </div>
-      )}
-
       {/* FOOTER */}
       <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-10`}>
         <p className="text-center text-xs text-gray-500">

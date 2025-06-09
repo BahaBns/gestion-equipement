@@ -34,10 +34,20 @@ const getModeles = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const search = (_a = req.query.search) === null || _a === void 0 ? void 0 : _a.toString();
         const modeles = yield prisma.modele.findMany({
             where: Object.assign({}, (search && {
-                name: {
-                    contains: search,
-                    mode: "insensitive",
-                },
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        nomTechnique: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                ],
             })),
             include: {
                 marque: true,
@@ -73,10 +83,20 @@ const getModelesByMarque = (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
         const modeles = yield prisma.modele.findMany({
             where: Object.assign({ marqueId }, (search && {
-                name: {
-                    contains: search,
-                    mode: "insensitive",
-                },
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        nomTechnique: {
+                            contains: search,
+                            mode: "insensitive",
+                        },
+                    },
+                ],
             })),
             include: {
                 marque: true,
@@ -100,7 +120,7 @@ const createModele = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const prisma = getPrismaClient(req);
         const { marqueId } = req.params;
-        const { name } = req.body;
+        const { name, nomTechnique } = req.body;
         // Validate required fields
         if (!name) {
             res.status(400).json({ message: "Name is required" });
@@ -132,6 +152,7 @@ const createModele = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             data: {
                 modeleId: `MOD-${(0, uuid_1.v4)().substring(0, 8)}`,
                 name,
+                nomTechnique: nomTechnique || null,
                 marqueId,
             },
             include: {
@@ -153,7 +174,7 @@ const updateModele = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const prisma = getPrismaClient(req);
         const { modeleId } = req.params;
-        const { name, marqueId } = req.body;
+        const { name, nomTechnique, marqueId } = req.body;
         // Validate
         if (!name) {
             res.status(400).json({ message: "Name is required" });
@@ -191,10 +212,26 @@ const updateModele = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 return;
             }
         }
+        else {
+            // Check for duplicates in the same marque
+            const existingModele = yield prisma.modele.findFirst({
+                where: {
+                    name: { equals: name, mode: "insensitive" },
+                    marqueId: modele.marqueId,
+                    modeleId: { not: modeleId },
+                },
+            });
+            if (existingModele) {
+                res.status(409).json({
+                    message: "A modele with this name already exists for this marque",
+                });
+                return;
+            }
+        }
         // Update modele
         const updatedModele = yield prisma.modele.update({
             where: { modeleId },
-            data: Object.assign({ name }, (marqueId && { marqueId })),
+            data: Object.assign({ name, nomTechnique: nomTechnique !== undefined ? nomTechnique : undefined }, (marqueId && { marqueId })),
             include: {
                 marque: true,
             },

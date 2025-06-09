@@ -1,4 +1,4 @@
-// utils/actifUtils.ts
+// utils/actifUtils.ts - UPDATED for assignment-level status
 import { Employee, Actif } from "@/state/api";
 
 // Define types for the different possible structures
@@ -7,6 +7,10 @@ type ActifAssignment =
   | {
       actifId: string;
       quantity?: number;
+      statusId?: string; // NEW: Assignment-level status ID
+      status?: { statusId: string; name: string }; // NEW: Assignment-level status
+      assignmentStatus?: { statusId: string; name: string }; // NEW: Alias for assignment status
+      assignmentStatusId?: string; // NEW: Alias for assignment status ID
       actif?: { actifId: string };
     };
 
@@ -15,6 +19,10 @@ type LicenseAssignment =
   | {
       licenseId: string;
       quantity?: number;
+      statusId?: string; // NEW: Assignment-level status ID
+      status?: { statusId: string; name: string }; // NEW: Assignment-level status
+      assignmentStatus?: { statusId: string; name: string }; // NEW: Alias for assignment status
+      assignmentStatusId?: string; // NEW: Alias for assignment status ID
       license?: { licenseId: string };
     };
 
@@ -197,63 +205,90 @@ export const normalizeStatusName = (status: string): string => {
 };
 
 /**
- * Extract status information from an actif object, handling various data structures
+ * Extract status information from an assignment object, prioritizing assignment-level status
  */
 export const extractActifStatus = (
   actif: any
 ): {
   statusName: string;
   statusId: string | null;
+  isAssignmentLevel: boolean;
 } => {
   if (!actif) {
-    return { statusName: "", statusId: null };
+    return { statusName: "", statusId: null, isAssignmentLevel: false };
   }
 
   // Try various paths to find status information
   let statusName = "";
   let statusId = null;
+  let isAssignmentLevel = false;
 
   if (typeof actif === "object") {
-    // Direct status object with name property
-    if (actif.status && typeof actif.status === "object" && actif.status.name) {
+    // PRIORITY 1: Assignment-level status (NEW)
+    if (actif.assignmentStatus && typeof actif.assignmentStatus === "object" && actif.assignmentStatus.name) {
+      statusName = actif.assignmentStatus.name;
+      statusId = actif.assignmentStatus.statusId || actif.assignmentStatusId || null;
+      isAssignmentLevel = true;
+      console.log(`Found assignment-level status: "${statusName}"`);
+    }
+    // PRIORITY 2: Direct assignment status ID
+    else if (actif.assignmentStatusId || (actif.statusId && actif.assignmentStatus)) {
+      statusId = actif.assignmentStatusId || actif.statusId;
+      isAssignmentLevel = true;
+      console.log(`Found assignment-level status ID: "${statusId}"`);
+    }
+    // PRIORITY 3: Status object when it's part of an assignment (could be assignment-level)
+    else if (actif.status && typeof actif.status === "object" && actif.status.name && !actif.actif) {
       statusName = actif.status.name;
       statusId = actif.status.statusId || null;
+      isAssignmentLevel = true; // Assume it's assignment-level if no nested actif
+      console.log(`Found status (likely assignment-level): "${statusName}"`);
+    }
+    // PRIORITY 4: Nested structure with assignment status
+    else if (actif.actif && actif.status && typeof actif.status === "object" && actif.status.name) {
+      statusName = actif.status.name;
+      statusId = actif.status.statusId || null;
+      isAssignmentLevel = true;
+      console.log(`Found nested assignment status: "${statusName}"`);
+    }
+    // FALLBACK: Global actif status
+    else if (actif.actif && actif.actif.status && typeof actif.actif.status === "object" && actif.actif.status.name) {
+      statusName = actif.actif.status.name;
+      statusId = actif.actif.status.statusId || null;
+      isAssignmentLevel = false;
+      console.log(`Found global actif status: "${statusName}"`);
+    }
+    // OLD STRUCTURE: Direct status object with name property
+    else if (actif.status && typeof actif.status === "object" && actif.status.name) {
+      statusName = actif.status.name;
+      statusId = actif.status.statusId || null;
+      isAssignmentLevel = false; // Could be either, assume global for backward compatibility
+      console.log(`Found direct status: "${statusName}"`);
     }
     // Status as a direct string property
     else if (actif.status && typeof actif.status === "string") {
       statusName = actif.status;
+      isAssignmentLevel = false;
+      console.log(`Found string status: "${statusName}"`);
     }
     // Status name as a direct property
     else if (actif.statusName && typeof actif.statusName === "string") {
       statusName = actif.statusName;
+      isAssignmentLevel = false;
+      console.log(`Found statusName: "${statusName}"`);
     }
     // Status ID as a direct property
     else if (actif.statusId) {
       statusId = actif.statusId;
-    }
-
-    // Nested actif object
-    if (!statusName && actif.actif && typeof actif.actif === "object") {
-      if (
-        actif.actif.status &&
-        typeof actif.actif.status === "object" &&
-        actif.actif.status.name
-      ) {
-        statusName = actif.actif.status.name;
-        statusId = actif.actif.status.statusId || null;
-      } else if (actif.actif.status && typeof actif.actif.status === "string") {
-        statusName = actif.actif.status;
-      } else if (actif.actif.statusName) {
-        statusName = actif.actif.statusName;
-      } else if (actif.actif.statusId) {
-        statusId = actif.actif.statusId;
-      }
+      isAssignmentLevel = false;
+      console.log(`Found statusId: "${statusId}"`);
     }
   }
 
   return {
     statusName: statusName,
     statusId: statusId,
+    isAssignmentLevel: isAssignmentLevel,
   };
 };
 
@@ -280,7 +315,7 @@ export const getActifDisplayStatus = (
       // Just a string ID, count it but can't determine status
       totalQuantity += 1;
     } else if (actif && typeof actif === "object") {
-      // Extract status information
+      // Extract status information (prioritizes assignment-level)
       const statusInfo = extractActifStatus(actif);
       status = statusInfo.statusName;
 

@@ -1,4 +1,4 @@
-// services/tokenService.ts
+// services/tokenService.ts - UPDATED INTERFACE
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import crypto from "crypto";
@@ -15,8 +15,11 @@ const insightPrisma = new PrismaClient({
   datasources: { db: { url: process.env.INSIGHT_DATABASE_URL } },
 });
 
+// UPDATED: Database type to be more specific
+type DatabaseType = "lagom" | "insight";
+
 // Helper function to get the right Prisma client based on database selection
-const getPrismaClient = (database?: string) => {
+const getPrismaClient = (database?: DatabaseType | string) => {
   console.log(
     `Getting Prisma client for database: ${database || "insight (default)"}`
   );
@@ -30,15 +33,15 @@ const JWT_SECRET =
 const TOKEN_EXPIRY = "7d";
 
 /**
- * Interface for the assignment token payload data
+ * UPDATED: Interface for the assignment token payload data with proper optional types
  */
 interface TokenPayload {
   employeeId: string;
-  actifIds?: string[];
-  licenseIds?: string[];
+  actifIds?: string[]; // Made explicitly optional
+  licenseIds?: string[]; // Made explicitly optional
   quantities?: Record<string, number>;
   type: "actif" | "license"; // Specify the type of assignment
-  database?: string; // Store the database name in the token
+  database?: DatabaseType; // More specific type for database
   exp?: number;
   iat?: number;
 }
@@ -56,7 +59,7 @@ export const generateAssignmentToken = (
   employeeId: string,
   actifIds: string[],
   quantities?: Record<string, number>,
-  database?: string
+  database?: DatabaseType | string
 ): string => {
   // Create payload
   const payload: TokenPayload = {
@@ -64,7 +67,7 @@ export const generateAssignmentToken = (
     actifIds,
     quantities,
     type: "actif",
-    database: database || "insight", // Include the database in the token
+    database: (database as DatabaseType) || "insight", // Include the database in the token
   };
 
   // Generate token
@@ -84,7 +87,7 @@ export const generateLicenseAssignmentToken = (
   employeeId: string,
   licenseIds: string[],
   quantities?: Record<string, number>,
-  database?: string
+  database?: DatabaseType | string
 ): string => {
   // Create payload
   const payload: TokenPayload = {
@@ -92,7 +95,7 @@ export const generateLicenseAssignmentToken = (
     licenseIds,
     quantities,
     type: "license",
-    database: database || "insight", // Include the database in the token
+    database: (database as DatabaseType) || "insight", // Include the database in the token
   };
 
   // Generate token
@@ -133,7 +136,7 @@ export const storeAssignmentToken = async (
   itemIds: string[],
   expiresAt: Date,
   type: "actif" | "license",
-  database?: string
+  database?: DatabaseType | string
 ): Promise<void> => {
   try {
     // Get the appropriate Prisma client
@@ -176,7 +179,7 @@ export const storeAssignmentToken = async (
 export const updateTokenStatus = async (
   token: string,
   status: "ACCEPTED" | "REJECTED" | "EXPIRED",
-  database?: string
+  database?: DatabaseType | string
 ): Promise<void> => {
   try {
     // Get the appropriate Prisma client
@@ -204,7 +207,7 @@ export const updateTokenStatus = async (
  */
 export const isTokenUsed = async (
   token: string,
-  database?: string
+  database?: DatabaseType | string
 ): Promise<boolean> => {
   try {
     // Get the appropriate Prisma client

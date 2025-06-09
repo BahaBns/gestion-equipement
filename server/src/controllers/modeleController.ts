@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from "uuid";
 
 const lagomPrisma = new PrismaClient({
@@ -18,6 +18,7 @@ function getPrismaClient(req: Request) {
 /**
  * Get all modeles
  */
+
 export const getModeles = async (
   req: Request,
   res: Response
@@ -29,10 +30,20 @@ export const getModeles = async (
     const modeles = await prisma.modele.findMany({
       where: {
         ...(search && {
-          name: {
-            contains: search,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              nomTechnique: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
         }),
       },
       include: {
@@ -49,7 +60,6 @@ export const getModeles = async (
     res.status(500).json({ message: "Failed to retrieve modeles" });
   }
 };
-
 
 /**
  * Get all modeles by marque
@@ -77,10 +87,20 @@ export const getModelesByMarque = async (
       where: {
         marqueId,
         ...(search && {
-          name: {
-            contains: search,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              nomTechnique: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
         }),
       },
       include: {
@@ -108,7 +128,7 @@ export const createModele = async (
   try {
     const prisma = getPrismaClient(req);
     const { marqueId } = req.params;
-    const { name } = req.body;
+    const { name, nomTechnique } = req.body;
 
     // Validate required fields
     if (!name) {
@@ -146,6 +166,7 @@ export const createModele = async (
       data: {
         modeleId: `MOD-${uuidv4().substring(0, 8)}`,
         name,
+        nomTechnique: nomTechnique || null,
         marqueId,
       },
       include: {
@@ -170,7 +191,7 @@ export const updateModele = async (
   try {
     const prisma = getPrismaClient(req);
     const { modeleId } = req.params;
-    const { name, marqueId } = req.body;
+    const { name, nomTechnique, marqueId } = req.body;
 
     // Validate
     if (!name) {
@@ -214,6 +235,22 @@ export const updateModele = async (
         });
         return;
       }
+    } else {
+      // Check for duplicates in the same marque
+      const existingModele = await prisma.modele.findFirst({
+        where: {
+          name: { equals: name, mode: "insensitive" },
+          marqueId: modele.marqueId,
+          modeleId: { not: modeleId },
+        },
+      });
+
+      if (existingModele) {
+        res.status(409).json({
+          message: "A modele with this name already exists for this marque",
+        });
+        return;
+      }
     }
 
     // Update modele
@@ -221,6 +258,7 @@ export const updateModele = async (
       where: { modeleId },
       data: {
         name,
+        nomTechnique: nomTechnique !== undefined ? nomTechnique : undefined,
         ...(marqueId && { marqueId }),
       },
       include: {

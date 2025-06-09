@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import {
   useGetModelesQuery,
   useGetMarquesQuery,
-  useGetAllActifTypesQuery,
   useCreateModeleMutation,
   useUpdateModeleMutation,
   useDeleteModeleMutation,
@@ -24,7 +23,6 @@ const ModeleManager = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentModele, setCurrentModele] = useState<Partial<Modele>>({});
   const [selectedMarqueId, setSelectedMarqueId] = useState("");
-  const [selectedActifTypeId, setSelectedActifTypeId] = useState("");
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [isSaving, setIsSaving] = useState(false);
 
@@ -33,9 +31,6 @@ const ModeleManager = () => {
 
   // Récupérer les marques pour le formulaire
   const { data: marques } = useGetMarquesQuery();
-
-  // Récupérer les types d'actifs
-  const { data: actifTypes } = useGetAllActifTypesQuery();
 
   // Mutations
   const [createModele] = useCreateModeleMutation();
@@ -48,7 +43,8 @@ const ModeleManager = () => {
     modeles?.filter(
       (modele) =>
         search === "" ||
-        modele.name.toLowerCase().includes(search.toLowerCase())
+        modele.name.toLowerCase().includes(search.toLowerCase()) ||
+        (modele.nomTechnique && modele.nomTechnique.toLowerCase().includes(search.toLowerCase()))
     ) || [];
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -59,7 +55,6 @@ const ModeleManager = () => {
   const handleAddNew = () => {
     setCurrentModele({});
     setSelectedMarqueId("");
-    setSelectedActifTypeId("");
     setFormErrors({});
     setIsEditing(false);
     setIsModalOpen(true);
@@ -69,18 +64,10 @@ const ModeleManager = () => {
   const handleEdit = (modele: Modele) => {
     setCurrentModele(modele);
     setSelectedMarqueId(modele.marqueId);
-    if (modele.marque?.actifTypeId) {
-      setSelectedActifTypeId(modele.marque.actifTypeId);
-    }
     setFormErrors({});
     setIsEditing(true);
     setIsModalOpen(true);
   };
-
-  // Filtrer les marques par type d'actif sélectionné
-  const filteredMarques = selectedActifTypeId
-    ? marques?.filter((marque) => marque.actifTypeId === selectedActifTypeId)
-    : marques;
 
   // Validation du formulaire
   const validateForm = (): boolean => {
@@ -111,6 +98,7 @@ const ModeleManager = () => {
         await updateModele({
           modeleId: currentModele.modeleId,
           name: currentModele.name || "",
+          nomTechnique: currentModele.nomTechnique || undefined,
           marqueId: selectedMarqueId,
         }).unwrap();
       } else {
@@ -121,6 +109,7 @@ const ModeleManager = () => {
         const result = await createModele({
           marqueId: selectedMarqueId,
           name: currentModele.name || "",
+          nomTechnique: currentModele.nomTechnique || undefined,
         }).unwrap();
 
         // Créer un hashtag pour le nouveau modèle
@@ -182,7 +171,7 @@ const ModeleManager = () => {
       <div className="mb-6">
         <input
           type="text"
-          placeholder="Rechercher un modèle..."
+          placeholder="Rechercher un modèle (nom ou nom technique)..."
           className="w-full px-4 py-2 border border-gray-300 rounded-md"
           value={search}
           onChange={handleSearch}
@@ -200,6 +189,7 @@ const ModeleManager = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="py-2 px-4 border-b text-center">Nom</th>
+                  <th className="py-2 px-4 border-b text-center">Nom Technique</th>
                   <th className="py-2 px-4 border-b text-center">Marque</th>
                   <th className="py-2 px-4 border-b text-center">Actifs</th>
                   <th className="py-2 px-4 border-b text-center">Actions</th>
@@ -210,6 +200,9 @@ const ModeleManager = () => {
                   <tr key={modele.modeleId} className="hover:bg-gray-50">
                     <td className="py-2 px-4 border-b text-center">
                       {modele.name}
+                    </td>
+                    <td className="py-2 px-4 border-b text-center">
+                      {modele.nomTechnique || "-"}
                     </td>
                     <td className="py-2 px-4 border-b text-center">
                       {modele.marque?.name || modele.marqueId}
@@ -286,6 +279,7 @@ const ModeleManager = () => {
             <h3 className="text-xl font-semibold mb-4">
               {isEditing ? "Modifier le Modèle" : "Ajouter un Modèle"}
             </h3>
+            
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Nom *</label>
               <input
@@ -305,25 +299,24 @@ const ModeleManager = () => {
                 <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
               )}
             </div>
+
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Type d'Actif *
-              </label>
-              <select
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md`}
-                value={selectedActifTypeId}
-                onChange={(e) => {
-                  setSelectedActifTypeId(e.target.value);
-                  setSelectedMarqueId(""); // Reset marque when actif type changes
-                }}
-              >
-                <option value="">Sélectionner un type d'actif</option>
-                {actifTypes?.map((type) => (
-                  <option key={type.actifTypeId} value={type.actifTypeId}>
-                    {type.nom}
-                  </option>
-                ))}
-              </select>
+              <label className="block text-sm font-medium mb-1">Nom Technique</label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                value={currentModele.nomTechnique || ""}
+                onChange={(e) =>
+                  setCurrentModele({
+                    ...currentModele,
+                    nomTechnique: e.target.value,
+                  })
+                }
+                placeholder="Nom technique (optionnel)"
+              />
+              <p className="text-gray-500 text-xs mt-1">
+                Nom technique ou référence du modèle
+              </p>
             </div>
 
             <div className="mb-4">
@@ -334,10 +327,9 @@ const ModeleManager = () => {
                 } rounded-md`}
                 value={selectedMarqueId}
                 onChange={(e) => setSelectedMarqueId(e.target.value)}
-                disabled={!selectedActifTypeId}
               >
                 <option value="">Sélectionner une marque</option>
-                {filteredMarques?.map((marque) => (
+                {marques?.map((marque) => (
                   <option key={marque.marqueId} value={marque.marqueId}>
                     {marque.name}
                   </option>
@@ -348,12 +340,8 @@ const ModeleManager = () => {
                   {formErrors.marqueId}
                 </p>
               )}
-              {!selectedActifTypeId && (
-                <p className="text-gray-500 text-xs mt-1">
-                  Veuillez d'abord sélectionner un type d'actif
-                </p>
-              )}
             </div>
+
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setIsModalOpen(false)}

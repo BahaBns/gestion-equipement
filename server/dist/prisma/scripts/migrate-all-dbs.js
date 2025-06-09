@@ -42,7 +42,7 @@ function createDatabaseIfNotExists(dbName) {
     return __awaiter(this, void 0, void 0, function* () {
         const pool = new pg_1.Pool({
             user: "postgres",
-            password: "Insight_h38UNZq64",
+            password: "123456",
             host: "localhost",
             port: 5432,
             database: "postgres", // Connect to default database
@@ -77,13 +77,16 @@ function setupAllDatabases() {
             yield createDatabaseIfNotExists("lagom");
             yield createDatabaseIfNotExists("insight");
             console.log("\n=== MIGRATING ALL DATABASES ===");
-            // Migrate auth database
+            /* Migrate auth database
             console.log("\nMigrating auth database...");
             process.env.DATABASE_URL = process.env.AUTH_DATABASE_URL;
-            (0, child_process_1.execSync)("npx prisma migrate dev --name initial-auth-setup --schema=./prisma/schema.auth.prisma", {
+            execSync(
+              "npx prisma migrate dev --name initial-auth-setup --schema=./prisma/schema.auth.prisma",
+              {
                 stdio: "inherit",
-                env: Object.assign({}, process.env),
-            });
+                env: { ...process.env },
+              }
+            );*/
             // Migrate lagom database
             console.log("\nMigrating lagom database...");
             process.env.DATABASE_URL = process.env.LAGOM_DATABASE_URL;

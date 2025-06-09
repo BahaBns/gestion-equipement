@@ -42,8 +42,7 @@ const generateEmployeeId = (req) => __awaiter(void 0, void 0, void 0, function* 
     return `EM00${nextNumber.toString().padStart(4, "0")}`; // Ensure 4-digit padding
 });
 /**
- * This is a modified version of the getEmployees function to better handle license data
- * Add this to your employee controller
+ * Updated getEmployees function with assignment-level status
  */
 const getEmployees = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -53,6 +52,7 @@ const getEmployees = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 actifs: {
                     include: {
                         actif: true,
+                        status: true, // ✅ Assignment-level status (you already have this)
                     },
                 },
                 licenses: {
@@ -63,13 +63,18 @@ const getEmployees = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                                 licensetype: true,
                             },
                         },
+                        status: true, // ✅ Add assignment-level status for licenses too
                     },
                 },
             },
         });
-        // Transform the data structure to make it easier to work with in the frontend
+        // Transform the data structure - UPDATED to include assignment-level status
         const transformedEmployees = employees.map((employee) => {
-            return Object.assign(Object.assign({}, employee), { actifs: employee.actifs.map((ea) => (Object.assign(Object.assign({}, ea.actif), { quantity: ea.quantity, assignedAt: ea.assignedAt }))), licenses: employee.licenses.map((el) => (Object.assign(Object.assign({}, el.license), { quantity: el.quantity, assignedAt: el.assignedAt }))) });
+            return Object.assign(Object.assign({}, employee), { actifs: employee.actifs.map((ea) => (Object.assign(Object.assign({}, ea.actif), { quantity: ea.quantity, assignedAt: ea.assignedAt, 
+                    // 🔥 ADD THESE LINES - Include assignment-level status
+                    assignmentStatus: ea.status, assignmentStatusId: ea.statusId }))), licenses: employee.licenses.map((el) => (Object.assign(Object.assign({}, el.license), { quantity: el.quantity, assignedAt: el.assignedAt, 
+                    // 🔥 ADD THESE LINES - Include assignment-level status for licenses
+                    assignmentStatus: el.status, assignmentStatusId: el.statusId }))) });
         });
         res.json(transformedEmployees);
     }

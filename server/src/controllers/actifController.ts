@@ -6,6 +6,7 @@ import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import { setupAutoTagMiddleware } from "../middleware/auto-tagMidlleware";
 
+
 import {
   generateAssignmentToken,
   storeAssignmentToken,
@@ -75,7 +76,7 @@ const generateEmployeeId = async (req: Request): Promise<string> => {
 };
 
 /**
- * Get all Actifs or search by name
+ * Get all Actifs or search by name - UPDATED VERSION
  */
 export const getActifs = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -135,6 +136,7 @@ export const getActifs = async (req: Request, res: Response): Promise<void> => {
         employees: {
           include: {
             employee: true,
+            status: true, // Include assignment-level status
           },
         },
       },
@@ -143,13 +145,15 @@ export const getActifs = async (req: Request, res: Response): Promise<void> => {
     // Transform the data to make it easier to work with in the frontend
     const transformedActifs = actifs.map((actif) => ({
       ...actif,
-      marqueObj: actif.marque, // Rename marque to marqueObj
-      modeleObj: actif.modele, // Rename modele to modeleObj
+      marqueObj: actif.marque,
+      modeleObj: actif.modele,
       employees: actif.employees.map((ea) => ({
         ...ea.employee,
         quantity: ea.quantity,
+        assignedAt: ea.assignedAt,
+        assignmentStatus: ea.status, // Add assignment-level status
+        assignmentStatusId: ea.statusId,
       })),
-      // Transform supplier data for easier frontend consumption
       suppliers: actif.fournisseurs.map((af) => ({
         fournisseurId: af.fournisseur.fournisseurId,
         name: af.fournisseur.name,
@@ -200,6 +204,9 @@ export const createActif = async (
     const assignQuantity = req.body.assignQuantity;
     const marqueId = req.body.marqueId;
     const modeleId = req.body.modeleId;
+
+
+ 
 
     // Check for multi-supplier mode
     const useMultipleSuppliers = req.body.useMultipleSuppliers === "true";
@@ -472,61 +479,119 @@ export const createActif = async (
       return createdActif;
     });
 
-    // Handle employee assignment
+    // Handle employee assignment -----------------------------
     let employeeToAssign = employeeId;
 
-    // If we need to create a new employee
-    if (createNewEmployee === "true" && newEmployeeName && newEmployeeEmail) {
-      try {
-        const newEmployeeId = await generateEmployeeId(req);
+// If we need to create a new employee
+if (createNewEmployee === "true" && newEmployeeName && newEmployeeEmail) {
+  try {
+    const newEmployeeId = await generateEmployeeId(req);
 
-        // Create the new employee
-        const newEmployee = await prisma.employee.create({
-          data: {
-            employeeId: newEmployeeId,
-            nom: newEmployeeName,
-            email: newEmployeeEmail,
-          },
-        });
+    // Create the new employee
+    const newEmployee = await prisma.employee.create({
+      data: {
+        employeeId: newEmployeeId,
+        nom: newEmployeeName,
+        email: newEmployeeEmail,
+      },
+    });
 
-        // Use the new employee's ID for assignment
-        employeeToAssign = newEmployee.employeeId;
-      } catch (employeeError) {
-        console.error("Error creating new employee:", employeeError);
-        res.status(400).json({
-          message: "Error creating new employee",
-          details:
-            employeeError instanceof Error
-              ? employeeError.message
-              : "Unknown error",
-        });
-        return;
-      }
+    // Use the new employee's ID for assignment
+    employeeToAssign = newEmployee.employeeId;
+  } catch (employeeError) {
+    console.error("Error creating new employee:", employeeError);
+    res.status(400).json({
+      message: "Error creating new employee",
+      details:
+        employeeError instanceof Error
+          ? employeeError.message
+          : "Unknown error",
+    });
+    return;
+  }
+}
+
+// If we have an employee to assign
+if (employeeToAssign) {
+  // Extract the selected database for token creation
+  const selectedDatabase = (req as any).user?.selectedDatabase || "insight";
+
+  // Verify the employee exists
+  const employee = await prisma.employee.findUnique({
+    where: { employeeId: employeeToAssign },
+  });
+
+  if (!employee) {
+    res.status(400).json({ message: "Invalid employeeId" });
+    return;
+  }
+
+  // Find the "Réservé" status for assignments
+  const reservedStatus = await prisma.status.findFirst({
+    where: { name: "Réservé" },
+  });
+
+  if (!reservedStatus) {
+    res.status(400).json({ message: 'Status "Réservé" not found' });
+    return;
+  }
+
+  // Create the relationship between employee and actif with "Réservé" status
+  await prisma.employeeActif.create({
+    data: {
+      employeeId: employeeToAssign,
+      actifId: newActif.actifId,
+      assignedAt: new Date(),
+      quantity: parsedAssignQuantity,
+      statusId: reservedStatus.statusId, // Set assignment-level status to "Réservé"
+    },
+  });
+
+  // Generate token for email acceptance
+  const quantities = { [newActif.actifId]: parsedAssignQuantity };
+  const token = generateAssignmentToken(
+    employeeToAssign,
+    [newActif.actifId],
+    quantities,
+    selectedDatabase
+  );
+
+  // Calculate expiry date (7 days from now)
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + 7);
+
+  console.log(`Storing assignment token with database: ${selectedDatabase}`);
+
+  // Store the token in database
+  await storeAssignmentToken(
+    token,
+    employeeToAssign,
+    [newActif.actifId],
+    expiryDate,
+    "actif",
+    selectedDatabase
+  );
+
+  // Send email notification to employee
+  console.log("Sending email notification to employee for new actif assignment");
+  try {
+    const emailSent = await sendAssignmentNotification(
+      employee,
+      [newActif], // Pass the created actif
+      token,
+      selectedDatabase
+    );
+    
+    if (!emailSent) {
+      console.warn("Failed to send assignment notification email");
+    } else {
+      console.log(`Assignment notification email sent successfully to ${employee.email}`);
     }
-
-    // If we have an employee to assign
-    if (employeeToAssign) {
-      // Verify the employee exists
-      const employee = await prisma.employee.findUnique({
-        where: { employeeId: employeeToAssign },
-      });
-
-      if (!employee) {
-        res.status(400).json({ message: "Invalid employeeId" });
-        return;
-      }
-
-      // Create the relationship between employee and actif with the specified quantity
-      await prisma.employeeActif.create({
-        data: {
-          employeeId: employeeToAssign,
-          actifId: newActif.actifId,
-          assignedAt: new Date(),
-          quantity: parsedAssignQuantity,
-        },
-      });
-    }
-
+  } catch (emailError) {
+    console.error("Error sending assignment notification:", emailError);
+    // Don't fail the actif creation if email fails
+  }
+}
     // Fetch the complete actif with relations
     const completeActif = await prisma.actif.findUnique({
       where: { actifId: newActif.actifId },
@@ -1121,7 +1186,7 @@ export const deleteActif = async (
 };
 
 /**
- * Assign actifs to an employee with quantities
+ * Assign actifs to an employee with quantities - UPDATED VERSION
  */
 export const assignActifsToEmployee = async (
   req: Request,
@@ -1161,6 +1226,16 @@ export const assignActifsToEmployee = async (
       return;
     }
 
+    // Find the "Réservé" status for assignments
+    const reservedStatus = await prisma.status.findFirst({
+      where: { name: "Réservé" },
+    });
+
+    if (!reservedStatus) {
+      res.status(400).json({ message: 'Status "Réservé" not found' });
+      return;
+    }
+
     // Execute in transaction for data consistency
     const results = await prisma.$transaction(async (prismaClient) => {
       const assignments = [];
@@ -1197,7 +1272,7 @@ export const assignActifsToEmployee = async (
 
         if (existingRelation) {
           console.log(`Updating existing relation for actif: ${actifId}`);
-          // Update the existing relationship with new quantity
+          // Update the existing relationship with new quantity and status
           await prismaClient.employeeActif.update({
             where: {
               employeeId_actifId: {
@@ -1208,37 +1283,26 @@ export const assignActifsToEmployee = async (
             data: {
               quantity: existingRelation.quantity + quantity,
               assignedAt: new Date(), // Update the assignment date
+              statusId: reservedStatus.statusId, // Set assignment-level status
             },
           });
         } else {
           console.log(`Creating new relation for actif: ${actifId}`);
-          // Create a new relationship
+          // Create a new relationship with assignment-level status
           await prismaClient.employeeActif.create({
             data: {
               employeeId,
               actifId,
               quantity,
               assignedAt: new Date(),
+              statusId: reservedStatus.statusId, // Set assignment-level status
             },
           });
         }
 
-        // Update the status of the actif to "Réservé"
-        const reservedStatus = await prismaClient.status.findFirst({
-          where: { name: "Réservé" },
-        });
-
-        if (reservedStatus) {
-          console.log(
-            `Updating actif status to "Réservé" (${reservedStatus.statusId})`
-          );
-          await prismaClient.actif.update({
-            where: { actifId },
-            data: { statusId: reservedStatus.statusId },
-          });
-        } else {
-          console.warn('Status "Réservé" not found in the database');
-        }
+        // DON'T UPDATE GLOBAL ACTIF STATUS - This was the problem!
+        // The global actif status should only be updated for actif-level changes
+        // like "En panne", "En maintenance", etc.
 
         // Add to assignments for the result
         assignments.push(actifId);
@@ -1301,6 +1365,7 @@ export const assignActifsToEmployee = async (
                 specification: true,
               },
             },
+            status: true, // Include assignment-level status
           },
         },
       },
@@ -1339,7 +1404,7 @@ export const assignActifsToEmployee = async (
 };
 
 /**
- * Remove actifs from an employee
+ * Remove actifs from an employee - UPDATED VERSION
  */
 export const removeActifsFromEmployee = async (
   req: Request,
@@ -1394,19 +1459,16 @@ export const removeActifsFromEmployee = async (
               actifId,
             },
           },
+          include: {
+            status: true, // Include assignment-level status
+          },
         });
 
         if (!existingRelation) {
           continue; // Skip if relationship doesn't exist
         }
 
-        // Get actif to check its status
-        const actif = await prismaClient.actif.findUnique({
-          where: { actifId },
-          include: { status: true },
-        });
-
-        const isReserved = actif?.status?.name === "Réservé";
+        const isReserved = existingRelation.status?.name === "Réservé";
 
         if (
           quantityToRemove === null ||
@@ -1422,39 +1484,7 @@ export const removeActifsFromEmployee = async (
             },
           });
 
-          // Check if this actif is no longer assigned to any employee
-          const otherAssignments = await prismaClient.employeeActif.findFirst({
-            where: { actifId },
-          });
-
-          if (!otherAssignments) {
-            // Find a "Disponible" status or similar
-            const availableStatus = await prismaClient.status.findFirst({
-              where: { name: "Disponible" },
-            });
-
-            if (availableStatus) {
-              // Update the actif status to "Disponible"
-              await prismaClient.actif.update({
-                where: { actifId },
-                data: { statusId: availableStatus.statusId },
-              });
-            }
-
-            // Also update etat if appropriate
-            const stockEtat = await prismaClient.etat.findFirst({
-              where: { name: "En stock" },
-            });
-
-            if (stockEtat) {
-              await prismaClient.actif.update({
-                where: { actifId },
-                data: { etatId: stockEtat.etatId },
-              });
-            }
-          }
-
-          // If this was a reserved actif, cancel the assignment token
+          // If this was a reserved assignment, cancel the assignment token
           if (isReserved) {
             // Find assignment tokens for this actif
             const pendingTokens = await prismaClient.assignmentToken.findMany({
@@ -1491,7 +1521,7 @@ export const removeActifsFromEmployee = async (
             }
           }
         } else {
-          // Update the quantity in the relationship
+          // Update the quantity in the relationship (keep the same status)
           await prismaClient.employeeActif.update({
             where: {
               employeeId_actifId: {
@@ -1543,6 +1573,7 @@ export const removeActifsFromEmployee = async (
                 specification: true,
               },
             },
+            status: true, // Include assignment-level status
           },
         },
       },
@@ -1562,8 +1593,9 @@ export const removeActifsFromEmployee = async (
   }
 };
 
+
 /**
- * Get all assignments with quantities
+ * Get all assignments with quantities - UPDATED VERSION
  */
 export const getActifAssignments = async (
   req: Request,
@@ -1588,6 +1620,7 @@ export const getActifAssignments = async (
             attachments: true,
           },
         },
+        status: true, // Include assignment-level status
       },
     });
 

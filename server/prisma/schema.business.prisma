@@ -61,11 +61,14 @@ model Etat {
   licenses License[] // One-to-many relation with License
 }
 
+// Update Status model to include new relations
 model Status {
-  statusId String    @id
-  name     String    @unique // e.g., "En panne", "Attribué", etc.
-  actifs   Actif[] // One-to-many relation with Actif
-  licenses License[] // One-to-many relation with License
+  statusId          String              @id
+  name              String              @unique
+  actifs            Actif[]
+  licenses          License[]
+  employeeActifs    EmployeeActif[]     // NEW: Assignment-level status relation
+  employeeLicenses  EmployeeLicense[]   // NEW: Assignment-level status relation
 }
 
 model Specification {
@@ -115,16 +118,19 @@ model AssignmentToken {
   @@index([type])
 }
 
-// Join table to link Employees and Actifs
+
+// Update EmployeeActif to include status tracking
 model EmployeeActif {
   employeeId String
   actifId    String
-  assignedAt DateTime @default(now()) // Tracks when an actif was assigned
+  assignedAt DateTime @default(now())
   quantity   Int      @default(1)
+  statusId   String?  // NEW: Assignment-level status
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
   actif      Actif    @relation(fields: [actifId], references: [actifId])
+  status     Status?  @relation(fields: [statusId], references: [statusId]) // NEW: Status relation
 
-  @@id([employeeId, actifId]) // Composite primary key
+  @@id([employeeId, actifId])
 }
 
 model Category {
@@ -182,12 +188,14 @@ model LicenseType {
 model EmployeeLicense {
   employeeId String
   licenseId  String
-  assignedAt DateTime @default(now()) // Tracks when a license was assigned
+  assignedAt DateTime @default(now())
+  quantity   Int      @default(1)
+  statusId   String?  // NEW: Assignment-level status
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
   license    License  @relation(fields: [licenseId], references: [licenseId])
-  quantity   Int      @default(1)
+  status     Status?  @relation(fields: [statusId], references: [statusId]) // NEW: Status relation
 
-  @@id([employeeId, licenseId]) // Composite primary key
+  @@id([employeeId, licenseId])
 }
 
 // Add attachments for licenses
@@ -283,6 +291,7 @@ model Marque {
 model Modele {
   modeleId String  @id
   name     String
+  nomTechnique  String?
   marqueId String
   marque   Marque  @relation(fields: [marqueId], references: [marqueId])
   actifs   Actif[]

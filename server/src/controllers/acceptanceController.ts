@@ -1,4 +1,4 @@
-// controllers/acceptanceController.ts
+// controllers/acceptanceController.ts - FIXED VERSION
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import {
@@ -25,7 +25,7 @@ const insightPrisma = setupAutoTagMiddleware(
 );
 
 // Helper function to get the right client
-function getPrismaClient(database?: string) {
+function getPrismaClient(database?: "lagom" | "insight" | string) {
   console.log(
     `Getting Prisma client for database: ${database || "insight (default)"}`
   );
@@ -59,7 +59,7 @@ export const validateAssignmentToken = async (
     console.log("Decoded token:", decoded);
 
     // Extract database from token if available, default to insight
-    const selectedDatabase = decoded.database || "insight";
+    const selectedDatabase = (decoded.database as "lagom" | "insight") || "insight";
     console.log(`Using database from token: ${selectedDatabase}`);
 
     // Get the appropriate Prisma client based on the database in the token
@@ -75,6 +75,19 @@ export const validateAssignmentToken = async (
       return;
     }
 
+    // Validate actifIds exist and create a safe reference
+    if (!decoded.actifIds || decoded.actifIds.length === 0) {
+      console.log("No actifIds found in token");
+      res.status(400).json({
+        valid: false,
+        message: "Aucun équipement trouvé dans le token",
+      });
+      return;
+    }
+
+    // Create a safe reference for TypeScript
+    const actifIds = decoded.actifIds;
+
     // Get employee information
     const employee = await prisma.employee.findUnique({
       where: { employeeId: decoded.employeeId },
@@ -88,7 +101,7 @@ export const validateAssignmentToken = async (
 
     // Get actifs information
     const actifs = await prisma.actif.findMany({
-      where: { actifId: { in: decoded.actifIds } },
+      where: { actifId: { in: actifIds } },
       include: {
         status: true,
         actiftype: true,
@@ -99,7 +112,16 @@ export const validateAssignmentToken = async (
 
     console.log(`Found ${actifs.length} actifs for token`);
 
-    // Check if all actifs are still reserved for this employee
+    if (actifs.length === 0) {
+      console.log("No actifs found for token");
+      res.status(404).json({
+        valid: false,
+        message: "Aucun équipement trouvé pour ce token",
+      });
+      return;
+    }
+
+    // UPDATED: Check assignment-level status instead of global actif status
     const reservedStatus = await prisma.status.findFirst({
       where: { name: "Réservé" },
     });
@@ -115,38 +137,82 @@ export const validateAssignmentToken = async (
 
     console.log(`Reserved status ID: ${reservedStatus.statusId}`);
 
-    // Check if any actifs are no longer reserved
-    const nonReservedActifs = actifs.filter(
-      (actif) => actif.statusId !== reservedStatus.statusId
+    // UPDATED: Check assignment-level status in EmployeeActif table
+    const assignments = await prisma.employeeActif.findMany({
+      where: {
+        employeeId: decoded.employeeId,
+        actifId: { in: actifIds },
+      },
+      include: {
+        actif: {
+          include: {
+            actiftype: true,
+            marque: true,
+            modele: true,
+          },
+        },
+        status: true, // Assignment-level status
+      },
+    });
+
+    console.log(`Found ${assignments.length} assignments for employee`);
+
+    if (assignments.length === 0) {
+      console.log("No assignments found for employee and actifs");
+      res.status(400).json({
+        valid: false,
+        message: "Aucune assignation trouvée pour ces équipements",
+      });
+      return;
+    }
+
+    if (assignments.length !== actifIds.length) {
+      console.log(
+        `Expected ${actifIds.length} assignments but found ${assignments.length}`
+      );
+      res.status(400).json({
+        valid: false,
+        message: "Certains équipements ne sont plus assignés à cet employé",
+      });
+      return;
+    }
+
+    // UPDATED: Check if assignments are in "Réservé" status (assignment-level)
+    const nonReservedAssignments = assignments.filter(
+      (assignment) => assignment.statusId !== reservedStatus.statusId
     );
 
-    if (nonReservedActifs.length > 0) {
+    if (nonReservedAssignments.length > 0) {
       console.log(
-        "Some actifs are no longer reserved:",
-        nonReservedActifs.map((a) => a.actifId)
+        "Some assignments are no longer reserved:",
+        nonReservedAssignments.map((a) => a.actifId)
       );
       res.status(400).json({
         valid: false,
         message: "Certains équipements ne sont plus réservés pour vous",
-        nonReservedActifs: nonReservedActifs.map((a) => ({
+        nonReservedActifs: nonReservedAssignments.map((a) => ({
           actifId: a.actifId,
-          marque: a.marque?.name || "Unknown",
-          modele: a.modele?.name || "Unknown",
+          marque: a.actif.marque?.name || "Unknown",
+          modele: a.actif.modele?.name || "Unknown",
+          currentStatus: a.status?.name || "Unknown",
         })),
       });
       return;
     }
 
-    // Transform actifs for response, including quantities
-    const actifDetails = actifs.map((actif) => {
-      const quantity = decoded.quantities?.[actif.actifId] || 1;
+    // Transform actifs for response, including quantities from assignments
+    const actifDetails = assignments.map((assignment) => {
+      const actif = assignment.actif;
+      const quantity = decoded.quantities?.[actif.actifId] || assignment.quantity;
+      
       return {
         actifId: actif.actifId,
-        marque: actif.marque?.name || "Unknown", // Access through relation
-        modele: actif.modele?.name || "Unknown", // Access through relation
+        marque: actif.marque?.name || "Unknown",
+        modele: actif.modele?.name || "Unknown",
         serialNumber: actif.serialNumber,
         type: actif.actiftype?.nom || actif.actifType,
         quantity,
+        assignmentStatus: assignment.status?.name || "Réservé",
       };
     });
 
@@ -186,8 +252,7 @@ export const resendAssignmentInvitation = async (
 ): Promise<void> => {
   try {
     const { employeeId, actifId, database } = req.body;
-    const selectedDatabase =
-      database || (req as any).user?.selectedDatabase || "insight";
+    const selectedDatabase = (database || (req as any).user?.selectedDatabase || "insight") as "lagom" | "insight";
 
     const prisma = getPrismaClient(selectedDatabase);
 
@@ -212,28 +277,35 @@ export const resendAssignmentInvitation = async (
       return;
     }
 
-    // Get actif and check if it's in "Réservé" status
-    const actif = await prisma.actif.findUnique({
-      where: { actifId },
+    // UPDATED: Check assignment-level status instead of global actif status
+    const assignment = await prisma.employeeActif.findUnique({
+      where: {
+        employeeId_actifId: {
+          employeeId,
+          actifId,
+        },
+      },
       include: {
+        actif: true,
         status: true,
       },
     });
 
-    if (!actif) {
+    if (!assignment) {
       res.status(404).json({
         success: false,
-        message: "Actif not found",
+        message: "Assignment not found",
       });
       return;
     }
 
-    // Verify actif is in "Réservé" status
-    if (actif.status?.name !== "Réservé") {
+    // Verify assignment is in "Réservé" status
+    if (assignment.status?.name !== "Réservé") {
       res.status(400).json({
         success: false,
         message:
-          "Cannot resend invitation for actif that is not in 'Réservé' status",
+          "Cannot resend invitation for assignment that is not in 'Réservé' status",
+        currentStatus: assignment.status?.name || "Unknown",
       });
       return;
     }
@@ -260,8 +332,9 @@ export const resendAssignmentInvitation = async (
     // Send a new email with the token
     const emailSent = await sendAssignmentNotification(
       employee,
-      [actif],
-      existingToken.token
+      [assignment.actif],
+      existingToken.token,
+      selectedDatabase
     );
 
     if (!emailSent) {
@@ -323,7 +396,7 @@ export const acceptAssignment = async (
     }
 
     // Extract database from token if available, default to insight
-    const selectedDatabase = decoded.database || "insight";
+    const selectedDatabase = (decoded.database as "lagom" | "insight") || "insight";
     console.log(`Using database from token: ${selectedDatabase}`);
 
     // Get the appropriate Prisma client based on the database in the token
@@ -339,6 +412,19 @@ export const acceptAssignment = async (
       return;
     }
 
+    // Validate actifIds exist and create a safe reference
+    if (!decoded.actifIds || decoded.actifIds.length === 0) {
+      console.log("No actifIds found in token");
+      res.status(400).json({
+        success: false,
+        message: "Aucun équipement trouvé dans le token",
+      });
+      return;
+    }
+
+    // Create a safe reference for TypeScript
+    const actifIds = decoded.actifIds;
+
     // Get employee and actifs
     const employee = await prisma.employee.findUnique({
       where: { employeeId: decoded.employeeId },
@@ -349,7 +435,7 @@ export const acceptAssignment = async (
       return;
     }
 
-    // Find the "Assigned" status to update actifs
+    // Find the "Assigné" status to update assignments
     const assignedStatus = await prisma.status.findFirst({
       where: { name: "Assigné" },
     });
@@ -364,24 +450,29 @@ export const acceptAssignment = async (
 
     // Execute all operations in a transaction
     await prisma.$transaction(async (prismaClient) => {
-      // Update status of all actifs to "Assigned"
-      for (const actifId of decoded.actifIds || []) {
-        await prismaClient.actif.update({
-          where: { actifId },
-          data: { statusId: assignedStatus.statusId },
+      // UPDATED: Update assignment-level status instead of global actif status
+      for (const actifId of actifIds) {
+        await prismaClient.employeeActif.updateMany({
+          where: {
+            employeeId: decoded.employeeId,
+            actifId: actifId,
+          },
+          data: { 
+            statusId: assignedStatus.statusId 
+          },
         });
       }
 
       // Get the updated actifs to include in the confirmation email
       const actifs = await prismaClient.actif.findMany({
-        where: { actifId: { in: decoded.actifIds } },
+        where: { actifId: { in: actifIds } },
       });
 
       // Mark the token as accepted - PASS THE DATABASE PARAMETER
       await updateTokenStatus(token, "ACCEPTED", selectedDatabase);
 
       // Send acceptance confirmation email
-      await sendAcceptanceConfirmation(employee, actifs);
+      await sendAcceptanceConfirmation(employee, actifs, selectedDatabase);
     });
 
     // Return success response
@@ -389,7 +480,7 @@ export const acceptAssignment = async (
       success: true,
       message: "Assignation acceptée avec succès",
       employeeId: decoded.employeeId,
-      actifIds: decoded.actifIds,
+      actifIds: actifIds,
     });
   } catch (error) {
     console.error("Error accepting assignment:", error);
@@ -431,7 +522,7 @@ export const rejectAssignment = async (
     }
 
     // Extract database from token if available, default to insight
-    const selectedDatabase = decoded.database || "insight";
+    const selectedDatabase = (decoded.database as "lagom" | "insight") || "insight";
     console.log(`Using database from token: ${selectedDatabase}`);
 
     // Get the appropriate Prisma client based on the database in the token
@@ -447,29 +538,22 @@ export const rejectAssignment = async (
       return;
     }
 
-    // Find the "Disponible" status to return actifs to stock
-    const availableStatus = await prisma.status.findFirst({
-      where: { name: "Disponible" },
-    });
-
-    if (!availableStatus) {
-      res.status(500).json({
+    // Validate actifIds exist
+    if (!decoded.actifIds || decoded.actifIds.length === 0) {
+      console.log("No actifIds found in token");
+      res.status(400).json({
         success: false,
-        message: 'Statut "Disponible" non trouvé dans le système',
+        message: "Aucun équipement trouvé dans le token",
       });
       return;
     }
-
+    const actifIds = decoded.actifIds;
     // Execute all operations in a transaction
     await prisma.$transaction(async (prismaClient) => {
-      // Update status of all actifs back to "Disponible"
-      for (const actifId of decoded.actifIds || []) {
-        await prismaClient.actif.update({
-          where: { actifId },
-          data: { statusId: availableStatus.statusId },
-        });
-
-        // Remove the employee-actif relationship
+      // UPDATED: Remove the assignments instead of updating global actif status
+      
+      for (const actifId of actifIds) {
+        // Remove the employee-actif relationship (this automatically handles the assignment-level status)
         await prismaClient.employeeActif.deleteMany({
           where: {
             employeeId: decoded.employeeId,
@@ -494,7 +578,7 @@ export const rejectAssignment = async (
       success: true,
       message: "Assignation refusée avec succès",
       employeeId: decoded.employeeId,
-      actifIds: decoded.actifIds,
+       actifIds: decoded.actifIds || [],
     });
   } catch (error) {
     console.error("Error rejecting assignment:", error);

@@ -19,7 +19,7 @@ const prisma = new auth_client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Start seeding User table in auth_db...");
-        const adminEmail = "admin@insight-times.com";
+        const adminEmail = "bah4.bns@gmail.com";
         const adminPassword = "admin123"; // The plain text password
         const adminName = "Admin"; // Optional: if you want to seed the name
         const saltRounds = 10;

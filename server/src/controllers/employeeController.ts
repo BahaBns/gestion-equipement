@@ -35,8 +35,7 @@ const generateEmployeeId = async (req: Request): Promise<string> => {
 };
 
 /**
- * This is a modified version of the getEmployees function to better handle license data
- * Add this to your employee controller
+ * Updated getEmployees function with assignment-level status
  */
 export const getEmployees = async (
   req: Request,
@@ -50,6 +49,7 @@ export const getEmployees = async (
         actifs: {
           include: {
             actif: true,
+            status: true, // ✅ Assignment-level status (you already have this)
           },
         },
         licenses: {
@@ -60,12 +60,13 @@ export const getEmployees = async (
                 licensetype: true,
               },
             },
+            status: true, // ✅ Add assignment-level status for licenses too
           },
         },
       },
     });
 
-    // Transform the data structure to make it easier to work with in the frontend
+    // Transform the data structure - UPDATED to include assignment-level status
     const transformedEmployees = employees.map((employee) => {
       return {
         ...employee,
@@ -73,11 +74,17 @@ export const getEmployees = async (
           ...ea.actif,
           quantity: ea.quantity,
           assignedAt: ea.assignedAt,
+          // 🔥 ADD THESE LINES - Include assignment-level status
+          assignmentStatus: ea.status, // This is the assignment-level status
+          assignmentStatusId: ea.statusId,
         })),
         licenses: employee.licenses.map((el) => ({
           ...el.license,
           quantity: el.quantity,
           assignedAt: el.assignedAt,
+          // 🔥 ADD THESE LINES - Include assignment-level status for licenses
+          assignmentStatus: el.status, // This is the assignment-level status
+          assignmentStatusId: el.statusId,
         })),
       };
     });

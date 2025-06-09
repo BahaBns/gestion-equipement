@@ -44,8 +44,12 @@ export interface Actif {
   attachments?: Attachment[];
   hashtags?: ActifHashtag[];
 
-  employees: (Employee & { quantity: number; assignedAt: string })[];
-  fournisseurs?: ActifFournisseur[];
+employees: (Employee & {
+    quantity: number;
+    assignedAt: string;
+    assignmentStatus?: Status; // NEW: Assignment-level status
+    assignmentStatusId?: string; // NEW: Assignment-level status ID
+  })[];  fournisseurs?: ActifFournisseur[];
   multipleSuppliers?: {
     fournisseurId: string;
     name: string;
@@ -102,6 +106,11 @@ export interface Attachment {
 export interface Status {
   statusId: string;
   name: string;
+  // Note: mawjoudin ama manest7a9'homch pour le moment
+  // actifs?: Actif[];
+  // licenses?: License[];
+  // employeeActifs?: EmployeeActif[];
+  // employeeLicenses?: EmployeeLicense[];
 }
 
 export interface StatusUsageStats {
@@ -119,6 +128,8 @@ export interface EmployeeActif {
   quantity: number;
   employee: Employee;
   actif: Actif;
+  status?: Status; 
+  statusId?: string;
 }
 
 export interface NewActif {
@@ -210,8 +221,16 @@ export interface Employee {
   employeeId: string;
   nom: string;
   email: string;
-  actifs?: EmployeeActif[];
-  licenses?: EmployeeLicense[];
+actifs?: (EmployeeActif & {
+    // Extended properties for transformed data
+    assignmentStatus?: Status;
+    assignmentStatusId?: string;
+  })[];
+  licenses?: (EmployeeLicense & {
+    // Extended properties for transformed data
+    assignmentStatus?: Status;
+    assignmentStatusId?: string;
+  })[];
 }
 
 export interface NewEmployee {
@@ -263,7 +282,12 @@ export interface License {
   status: Status;
   etat: Etat; // Add etat property
   attachments: LicenseAttachment[];
-  employees: (Employee & { quantity: number; assignedAt: string })[];
+employees: (Employee & {
+    quantity: number;
+    assignedAt: string;
+    assignmentStatus?: Status; // NEW: Assignment-level status
+    assignmentStatusId?: string; // NEW: Assignment-level status ID
+  })[];  
   daysUntilExpiry?: number;
   daysExpired?: number;
   hashtags?: LicenseHashtag[];
@@ -344,9 +368,12 @@ export interface EmployeeLicense {
   licenseId: string;
   assignedAt: string;
   quantity: number;
+  statusId?: string; // NEW: Assignment-level status ID
   employee: Employee;
   license: License;
+  status?: Status; // NEW: Assignment-level status
 }
+
 export interface EtatUsageStats {
   etatId: string;
   name: string;
@@ -379,6 +406,7 @@ export interface Marque {
 export interface Modele {
   modeleId: string;
   name: string;
+  nomTechnique?: string; // New field for technical name
   marqueId: string;
   marque?: Marque;
   _count?: {
@@ -1718,26 +1746,28 @@ requestPasswordReset: build.mutation<
       providesTags: ["Modeles"],
     }),
 
-    createModele: build.mutation<Modele, { marqueId: string; name: string }>({
-      query: ({ marqueId, name }) => ({
-        url: `/modeles/marque/${marqueId}`,
-        method: "POST",
-        body: { name },
-      }),
-      invalidatesTags: ["Modeles"],
-    }),
+// Updated createModele mutation
+createModele: build.mutation<Modele, { marqueId: string; name: string; nomTechnique?: string }>({
+  query: ({ marqueId, name, nomTechnique }) => ({
+    url: `/modeles/marque/${marqueId}`,
+    method: "POST",
+    body: { name, nomTechnique },
+  }),
+  invalidatesTags: ["Modeles"],
+}),
 
-    updateModele: build.mutation<
-      Modele,
-      { modeleId: string; name: string; marqueId?: string }
-    >({
-      query: ({ modeleId, ...data }) => ({
-        url: `/modeles/${modeleId}`,
-        method: "PUT",
-        body: data,
-      }),
-      invalidatesTags: ["Modeles"],
-    }),
+// Updated updateModele mutation
+updateModele: build.mutation<
+  Modele,
+  { modeleId: string; name: string; nomTechnique?: string; marqueId?: string }
+>({
+  query: ({ modeleId, ...data }) => ({
+    url: `/modeles/${modeleId}`,
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Modeles"],
+}),
 
     deleteModele: build.mutation<void, string>({
       query: (modeleId) => ({

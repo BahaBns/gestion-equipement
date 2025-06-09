@@ -9,7 +9,7 @@ dotenv.config();
 async function createDatabaseIfNotExists(dbName: string) {
   const pool = new Pool({
     user: "postgres",
-    password: "Insight_h38UNZq64",
+    password: "123456",
     host: "localhost",
     port: 5432,
     database: "postgres", // Connect to default database
@@ -47,7 +47,7 @@ async function setupAllDatabases() {
 
     console.log("\n=== MIGRATING ALL DATABASES ===");
 
-    // Migrate auth database
+    /* Migrate auth database
     console.log("\nMigrating auth database...");
     process.env.DATABASE_URL = process.env.AUTH_DATABASE_URL;
     execSync(
@@ -56,7 +56,7 @@ async function setupAllDatabases() {
         stdio: "inherit",
         env: { ...process.env },
       }
-    );
+    );*/
 
     // Migrate lagom database
     console.log("\nMigrating lagom database...");

@@ -66,6 +66,19 @@ const AssignLicensesDialog = ({
     emailSent: boolean;
   } | null>(null);
 
+
+    // Reset dialog state when opening
+  useEffect(() => {
+    if (open) {
+      // Reset all local state when dialog opens
+      setSearchTerm("");
+      setAssignmentResult(null);
+      setIsAssigning(false);
+      setSelectedLicenses([]);
+      setLicenseQuantities({});
+    }
+  }, [open, setSelectedLicenses]);
+
   // Find the "Réservé" status ID when the component loads
   useEffect(() => {
     if (statuses) {
